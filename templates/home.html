@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="text-center mt-5">
+
+<h1>🏥 Integrated Patient Care Management System</h1>
+
+<p class="lead">
+Manage Patients, Doctors, Nurses and Appointments
+efficiently.
+</p>
+
+<a href="{{ url_for('select_role') }}"
+class="btn btn-primary btn-lg">
+
+Login
+
+</a>
+
+<a href="{{ url_for('register') }}"
+class="btn btn-success btn-lg">
+
+Register
+
+</a>
+
+</div>
+
+{% endblock %}

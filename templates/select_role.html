@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center">
+
+        <h2>🏥 Integrated Patient Care Management System</h2>
+
+        <p class="lead">
+            Please choose your role to continue
+        </p>
+
+    </div>
+
+    <div class="row justify-content-center mt-4">
+
+        <div class="col-md-6">
+
+            <div class="d-grid gap-3">
+
+                <a href="{{ url_for('login', role='admin') }}"
+                   class="btn btn-primary btn-lg">
+
+                    🛡 Admin Login
+
+                </a>
+
+                <a href="{{ url_for('login', role='doctor') }}"
+                   class="btn btn-success btn-lg">
+
+                    👨‍⚕️ Doctor Login
+
+                </a>
+
+                <a href="{{ url_for('login', role='nurse') }}"
+                   class="btn btn-secondary btn-lg">
+
+                    👩‍⚕️ Nurse Login
+
+                </a>
+
+                <a href="{{ url_for('login', role='patient') }}"
+                   class="btn btn-warning btn-lg">
+
+                    👤 Patient Login
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
