@@ -21,3 +21,21 @@ def load_user(user_id):
 
     def __repr__(self):
         return f"<User {self.username}>"
+    
+class Patient(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    full_name = db.Column(db.String(100), nullable=False)
+
+    age = db.Column(db.Integer)
+
+    gender = db.Column(db.String(20))
+
+    phone = db.Column(db.String(15))
+
+    address = db.Column(db.String(200))
+
+    blood_group = db.Column(db.String(10))
+
+    disease = db.Column(db.String(100))

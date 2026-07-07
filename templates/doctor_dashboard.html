@@ -1,68 +1,62 @@
-{% extends "base.html" %}
+{% extends "dashboard_base.html" %}
 
 {% block content %}
 
-<div class="container">
+<h2 class="mb-4">
 
-    <h2 class="mb-4">
-        👨‍⚕️ Doctor Dashboard
-    </h2>
+Doctor Dashboard
 
-    <h5>
-        Welcome,
-        {{ current_user.full_name }}
-    </h5>
+</h2>
 
-    <hr>
+<div class="row">
 
-    <div class="row">
+<div class="col-md-4">
 
-        <div class="col-md-4">
+<div class="card">
 
-            <div class="card dashboard-card p-3">
+<div class="card-body">
 
-                <h4>Patients</h4>
+<h5>Total Patients</h5>
 
-                <h2>0</h2>
+<h1>{{ total_patients }}</h1>
 
-            </div>
+</div>
 
-        </div>
+</div>
 
-        <div class="col-md-4">
+</div>
 
-            <div class="card dashboard-card p-3">
+<div class="col-md-4">
 
-                <h4>Appointments</h4>
+<div class="card">
 
-                <h2>0</h2>
+<div class="card-body">
 
-            </div>
+<h5>Appointments</h5>
 
-        </div>
+<h1>0</h1>
 
-        <div class="col-md-4">
+</div>
 
-            <div class="card dashboard-card p-3">
+</div>
 
-                <h4>Prescriptions</h4>
+</div>
 
-                <h2>0</h2>
+<div class="col-md-4">
 
-            </div>
+<div class="card">
 
-        </div>
+<div class="card-body">
 
-    </div>
+<h5>Treatments</h5>
 
-    <br>
+<h1>0</h1>
 
-    <a href="{{ url_for('logout') }}"
-       class="btn btn-danger">
+</div>
 
-       Logout
+</div>
 
-    </a>
+</div>
 
 </div>
 

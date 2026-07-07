@@ -1,0 +1,44 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h3>Patient Profile</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table">
+
+<tr><th>Name</th><td>{{ patient.full_name }}</td></tr>
+
+<tr><th>Age</th><td>{{ patient.age }}</td></tr>
+
+<tr><th>Gender</th><td>{{ patient.gender }}</td></tr>
+
+<tr><th>Phone</th><td>{{ patient.phone }}</td></tr>
+
+<tr><th>Blood Group</th><td>{{ patient.blood_group }}</td></tr>
+
+<tr><th>Disease</th><td>{{ patient.disease }}</td></tr>
+
+<tr><th>Address</th><td>{{ patient.address }}</td></tr>
+
+</table>
+
+<a href="{{ url_for('patients') }}"
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}
