@@ -1,0 +1,39 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h3>Edit Bill</h3>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+{{ form.hidden_tag() }}
+
+{{ form.patient.label }}
+{{ form.patient(class="form-select") }}
+
+{{ form.amount.label }}
+{{ form.amount(class="form-control") }}
+
+{{ form.payment_status.label }}
+{{ form.payment_status(class="form-select") }}
+
+{{ form.bill_date.label }}
+{{ form.bill_date(class="form-control") }}
+
+{{ form.submit(value="Update Bill", class="btn btn-warning") }}
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

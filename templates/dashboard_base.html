@@ -23,6 +23,7 @@
 
 <div class="d-flex">
 
+    <!-- Sidebar -->
     <div class="sidebar">
 
         <h3 class="text-center mb-4">
@@ -37,16 +38,16 @@
             <i class="bi bi-people-fill"></i> Patients
         </a>
 
-        <a href="#">
-            <i class="bi bi-calendar-check"></i> Appointments
+        <a href="{{ url_for('appointments') }}">
+            <i class="bi bi-calendar-event"></i> Appointments
         </a>
 
-        <a href="#">
-            <i class="bi bi-capsule"></i> Treatments
+        <a href="{{ url_for('treatments') }}">
+            <i class="bi bi-capsule-pill"></i> Treatments
         </a>
 
-        <a href="#">
-            <i class="bi bi-receipt"></i> Billing
+        <a href="{{ url_for('bills') }}">
+            <i class="bi bi-credit-card"></i> Billing
         </a>
 
         <a href="{{ url_for('logout') }}">
@@ -55,7 +56,8 @@
 
     </div>
 
-    <div class="content">
+    <!-- Main Content -->
+    <div class="content container-fluid p-4">
 
         {% block content %}
         {% endblock %}
@@ -64,6 +66,12 @@
 
 </div>
 
-</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% block scripts %}
+{% endblock %}
+
+</body>
 </html>

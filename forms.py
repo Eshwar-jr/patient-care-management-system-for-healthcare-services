@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SelectField, SubmitField, BooleanField, IntegerField, DateField, TimeField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length
-
+from wtforms.fields import DecimalField
 
 class RegistrationForm(FlaskForm):
 
@@ -109,3 +109,98 @@ class PatientForm(FlaskForm):
     )
 
     submit = SubmitField("Save Patient")
+
+
+class AppointmentForm(FlaskForm):
+
+    patient = SelectField(
+        "Patient",
+        coerce=int,
+        validators=[DataRequired()]
+    )
+
+    doctor_name = StringField(
+        "Doctor Name",
+        validators=[DataRequired()]
+    )
+
+    appointment_date = DateField(
+        "Appointment Date",
+        format="%Y-%m-%d",
+        validators=[DataRequired()]
+    )
+
+    appointment_time = TimeField(
+        "Appointment Time",
+        format="%H:%M",
+        validators=[DataRequired()]
+    )
+
+    reason = StringField(
+        "Reason",
+        validators=[DataRequired()]
+    )
+
+    submit = SubmitField("Book Appointment")
+
+
+class TreatmentForm(FlaskForm):
+
+    patient = SelectField(
+        "Patient",
+        coerce=int,
+        validators=[DataRequired()]
+    )
+
+    diagnosis = StringField(
+        "Diagnosis",
+        validators=[DataRequired()]
+    )
+
+    medicines = StringField(
+        "Medicines",
+        validators=[DataRequired()]
+    )
+
+    notes = TextAreaField(
+        "Notes"
+    )
+
+    date = DateField(
+        "Treatment Date",
+        format="%Y-%m-%d",
+        validators=[DataRequired()]
+    )
+
+    submit = SubmitField(
+        "Save Treatment"
+    )
+
+class BillingForm(FlaskForm):
+
+    patient = SelectField(
+        "Patient",
+        coerce=int,
+        validators=[DataRequired()]
+    )
+
+    amount = DecimalField(
+        "Amount",
+        validators=[DataRequired()]
+    )
+
+    payment_status = SelectField(
+        "Payment Status",
+        choices=[
+            ("Pending", "Pending"),
+            ("Paid", "Paid")
+        ]
+    )
+
+    bill_date = DateField(
+        "Bill Date",
+        format="%Y-%m-%d",
+        validators=[DataRequired()]
+    )
+
+    submit = SubmitField("Save Bill")

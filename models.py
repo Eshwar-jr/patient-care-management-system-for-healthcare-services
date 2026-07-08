@@ -24,6 +24,8 @@ def load_user(user_id):
     
 class Patient(db.Model):
 
+    __tablename__ = "patients"
+
     id = db.Column(db.Integer, primary_key=True)
 
     full_name = db.Column(db.String(100), nullable=False)
@@ -39,3 +41,123 @@ class Patient(db.Model):
     blood_group = db.Column(db.String(10))
 
     disease = db.Column(db.String(100))
+
+
+class Appointment(db.Model):
+
+    __tablename__ = "appointments"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+
+    patient = db.relationship(
+        "Patient",
+        backref="appointments"
+    )
+
+    doctor_name = db.Column(db.String(100))
+    appointment_date = db.Column(db.Date)
+    appointment_time = db.Column(db.Time)
+    reason = db.Column(db.String(200))
+    status = db.Column(db.String(30), default="Scheduled")
+
+    doctor_name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    appointment_date = db.Column(
+        db.Date,
+        nullable=False
+    )
+
+    appointment_time = db.Column(
+        db.Time,
+        nullable=False
+    )
+
+    reason = db.Column(
+        db.String(255)
+    )
+
+    status = db.Column(
+        db.String(30),
+        default="Scheduled"
+    )
+    status = db.Column(
+    db.String(20),
+    default="Booked"
+    )
+
+class Treatment(db.Model):
+
+    __tablename__ = "treatments"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+
+    patient = db.relationship(
+        "Patient",
+        backref="treatments"
+    )
+
+    diagnosis = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    medicines = db.Column(
+        db.String(300),
+        nullable=False
+    )
+
+    notes = db.Column(
+        db.String(500)
+    )
+
+    date = db.Column(
+        db.Date,
+        nullable=False
+    )
+
+class Bill(db.Model):
+
+    __tablename__ = "bills"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+
+    patient = db.relationship(
+        "Patient",
+        backref="bills"
+    )
+
+    amount = db.Column(
+        db.Float,
+        nullable=False
+    )
+
+    payment_status = db.Column(
+        db.String(30),
+        default="Pending"
+    )
+
+    bill_date = db.Column(
+        db.Date,
+        nullable=False
+    )

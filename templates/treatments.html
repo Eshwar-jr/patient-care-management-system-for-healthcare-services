@@ -1,0 +1,77 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between mb-3">
+
+<h2>Treatments</h2>
+
+<a href="{{ url_for('add_treatment') }}"
+class="btn btn-primary">
+
++ Add Treatment
+
+</a>
+
+</div>
+
+<table class="table table-striped">
+
+<thead>
+
+<tr>
+
+<th>Patient</th>
+
+<th>Diagnosis</th>
+
+<th>Medicines</th>
+
+<th>Date</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for treatment in treatments %}
+
+<tr>
+
+<td>{{ treatment.patient.full_name }}</td>
+
+<td>{{ treatment.diagnosis }}</td>
+
+<td>{{ treatment.medicines }}</td>
+
+<td>{{ treatment.date }}</td>
+<td>
+
+<a href="{{ url_for('edit_treatment', id=treatment.id) }}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a href="{{ url_for('delete_treatment', id=treatment.id) }}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete this treatment?')">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}
