@@ -1,139 +1,97 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="alert alert-primary shadow-sm">
-
-    <strong>Integrated Patient Care Management System</strong>
-
-    <br>
-
-    Manage Patients, Doctors, Appointments, Treatments and Billing efficiently.
-
-</div>
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <h2>👩‍⚕️ Nurses Management</h2>
-
-    <a href="{{ url_for('register', role='nurse') }}"
-       class="btn btn-primary">
-
-        <i class="bi bi-plus-circle"></i> Add Nurse
-
-    </a>
-
-</div>
-
-<div class="row mb-3">
-
-    <div class="col-md-4">
-
-        <input
-            type="text"
-            id="nurseSearch"
-            class="form-control"
-            placeholder="🔍 Search Nurse...">
-
+<div class="alert alert-primary border-0 d-flex align-items-center gap-2 mb-4 py-3">
+    <i class="bi bi-info-circle-fill fs-5"></i>
+    <div>
+        <strong>Integrated Patient Care Management System:</strong> Register assistant nurses, update details, and coordinate access privileges.
     </div>
-
 </div>
 
-<table class="table table-striped table-hover shadow align-middle" id="nurseTable">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">👩‍⚕️ Nurses Management</h2>
+        <p class="text-muted mb-0 small">Overview of all active nurse staff</p>
+    </div>
+    <a href="{{ url_for('register', role='nurse') }}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle"></i> Add Nurse
+    </a>
+</div>
 
-    <thead class="table-primary">
+<!-- Search Box -->
+<div class="row mb-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="nurseSearch"
+                class="form-control border-start-0 ps-0 bg-white"
+                placeholder="Search nurses database...">
+        </div>
+    </div>
+</div>
 
-        <tr>
-
-            <th>ID</th>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-    {% for nurse in nurses %}
-
-        <tr>
-
-            <td>{{ nurse.id }}</td>
-
-            <td>{{ nurse.full_name }}</td>
-
-            <td>{{ nurse.username }}</td>
-
-            <td>{{ nurse.email }}</td>
-
-            <td>{{ nurse.phone }}</td>
-
-            <td>
-
-                <a href="{{ url_for('edit_nurse', id=nurse.id) }}"
-                   class="btn btn-warning btn-sm">
-
-                     <i class="bi bi-pencil-square"></i> Edit
-
-                </a>
-
-                 <a href="{{ url_for('delete_nurse', id=nurse.id) }}"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('Delete this nurse?')">
-
-                    <i class="bi bi-trash"></i> Delete
-
-                </a>
-
-            </td>
-
-        </tr>
-        
-    {% else %}
-
-        <tr>
-
-            <td colspan="6" class="text-center text-muted">
-
-                No Nurses Available
-
-            </td>
-
-        </tr>
-
-    {% endfor %}
-
-    </tbody>
-
-</table>
-
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="nurseTable">
+                <thead>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th width="200" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for nurse in nurses %}
+                <tr>
+                    <td class="text-muted fw-bold">#{{ nurse.id }}</td>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ nurse.full_name }}</span>
+                    </td>
+                    <td>{{ nurse.username }}</td>
+                    <td><i class="bi bi-envelope text-muted me-1 small"></i>{{ nurse.email }}</td>
+                    <td><i class="bi bi-telephone text-muted me-1 small"></i>{{ nurse.phone }}</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('edit_nurse', id=nurse.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a href="{{ url_for('delete_nurse', id=nurse.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Delete this nurse?')">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-people fs-2 mb-2 d-block"></i>
+                        No Nurses Available
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
 <script>
-
 document.getElementById("nurseSearch").addEventListener("keyup", function() {
-
     let value = this.value.toLowerCase();
-
     let rows = document.querySelectorAll("#nurseTable tbody tr");
-
     rows.forEach(function(row){
-
-        row.style.display =
-            row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
     });
-
 });
-
 </script>
-
 {% endblock %}

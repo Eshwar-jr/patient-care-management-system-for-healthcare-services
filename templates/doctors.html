@@ -1,140 +1,97 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-<div class="alert alert-primary shadow-sm">
-
-    <strong>Integrated Patient Care Management System</strong>
-
-    <br>
-
-    Manage Patients, Doctors, Appointments, Treatments and Billing efficiently.
-
+<div class="alert alert-primary border-0 d-flex align-items-center gap-2 mb-4 py-3">
+    <i class="bi bi-info-circle-fill fs-5"></i>
+    <div>
+        <strong>Integrated Patient Care Management System:</strong> Register medical staff, edit contact parameters, and manage authorization levels.
+    </div>
 </div>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <h2>👨‍⚕️ Doctors Management</h2>
-
-    <a href="{{ url_for('register', role='doctor') }}"
-       class="btn btn-primary">
-
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">👨‍⚕️ Doctors Management</h2>
+        <p class="text-muted mb-0 small">Overview of all active medical staff</p>
+    </div>
+    <a href="{{ url_for('register', role='doctor') }}" class="btn btn-primary shadow-sm">
         <i class="bi bi-plus-circle"></i> Add Doctor
-
     </a>
-
 </div>
 
 <!-- Search Box -->
-
-<div class="row mb-3">
-
-    <div class="col-md-4">
-
-        <input
-            type="text"
-            id="doctorSearch"
-            class="form-control"
-            placeholder="🔍 Search Doctor...">
-
+<div class="row mb-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="doctorSearch"
+                class="form-control border-start-0 ps-0 bg-white"
+                placeholder="Search doctors database...">
+        </div>
     </div>
-
 </div>
 
-<table class="table table-striped table-hover table-bordered align-middle" id="doctorTable">
-
-    <thead class="table-primary">
-
-        <tr>
-
-            <th>ID</th>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th width="220">Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-    {% for doctor in doctors %}
-
-        <tr>
-
-            <td>{{ doctor.id }}</td>
-
-            <td>{{ doctor.full_name }}</td>
-
-            <td>{{ doctor.username }}</td>
-
-            <td>{{ doctor.email }}</td>
-
-            <td>{{ doctor.phone }}</td>
-
-            <td>
-
-                <a href="{{ url_for('edit_doctor', id=doctor.id) }}"
-                   class="btn btn-warning btn-sm">
-
-                    <i class="bi bi-pencil-square"></i> Edit
-
-                </a>
-
-                <a href="{{ url_for('delete_doctor', id=doctor.id) }}"
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('Are you sure you want to delete this doctor?')">
-
-                    <i class="bi bi-trash"></i> Delete
-
-                </a>
-
-            </td>
-
-        </tr>
-
-    {% else %}
-
-        <tr>
-
-            <td colspan="6" class="text-center text-muted">
-
-                No Doctors Available
-
-            </td>
-
-        </tr>
-
-    {% endfor %}
-
-    </tbody>
-
-</table>
-
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="doctorTable">
+                <thead>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th width="200" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td class="text-muted fw-bold">#{{ doctor.id }}</td>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ doctor.full_name }}</span>
+                    </td>
+                    <td>{{ doctor.username }}</td>
+                    <td><i class="bi bi-envelope text-muted me-1 small"></i>{{ doctor.email }}</td>
+                    <td><i class="bi bi-telephone text-muted me-1 small"></i>{{ doctor.phone }}</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('edit_doctor', id=doctor.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a href="{{ url_for('delete_doctor', id=doctor.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Are you sure you want to delete this doctor?')">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-person-badge fs-2 mb-2 d-block"></i>
+                        No Doctors Available
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
 <script>
-
 document.getElementById("doctorSearch").addEventListener("keyup", function() {
-
     let value = this.value.toLowerCase();
-
     let rows = document.querySelectorAll("#doctorTable tbody tr");
-
     rows.forEach(function(row){
-
-        row.style.display =
-            row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
     });
-
 });
-
 </script>
-
 {% endblock %}

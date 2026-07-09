@@ -1,63 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="row justify-content-center">
-
-    <div class="col-md-6">
-
-        <div class="card shadow">
-
-            <div class="card-header text-center">
-                <h3>User Registration</h3>
+<div class="row justify-content-center py-3">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <div class="fs-1 mb-2">🏥</div>
+                <h3 class="fw-bold mb-0">Create Hospital Account</h3>
+                <p class="text-white-50 small mb-0 mt-1">Register to join our patient care network</p>
             </div>
-
-            <div class="card-body">
-
+            <div class="card-body p-4">
                 <form method="POST">
-
                     {{ form.hidden_tag() }}
 
-                    <div class="mb-3">
-                        {{ form.full_name.label(class="form-label") }}
-                        {{ form.full_name(class="form-control") }}
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            {{ form.full_name.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                                {{ form.full_name(class="form-control bg-light-focus", placeholder="Dr. John Doe") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.username.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-person-badge"></i></span>
+                                {{ form.username(class="form-control bg-light-focus", placeholder="johndoe") }}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.username.label(class="form-label") }}
-                        {{ form.username(class="form-control") }}
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            {{ form.email.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                                {{ form.email(class="form-control bg-light-focus", placeholder="john@hospital.com") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.phone.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-telephone"></i></span>
+                                {{ form.phone(class="form-control bg-light-focus", placeholder="123-456-7890") }}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
-                        {{ form.email(class="form-control") }}
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            {{ form.password.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                                {{ form.password(class="form-control bg-light-focus", placeholder="••••••••") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.role.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-file-earmark-person"></i></span>
+                                {{ form.role(class="form-select bg-light-focus") }}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.phone.label(class="form-label") }}
-                        {{ form.phone(class="form-control") }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control") }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form.role.label(class="form-label") }}
-                        {{ form.role(class="form-select") }}
-                    </div>
-
-                    {{ form.submit(class="btn btn-primary w-100") }}
-
+                    {{ form.submit(class="btn btn-primary w-100 py-2 fs-6 mb-3") }}
                 </form>
 
+                <hr class="my-4 text-muted">
+
+                <p class="text-center mb-0 text-muted small">
+                    Already have an account? 
+                    <a href="{{ url_for('select_role') }}" class="text-primary fw-semibold text-decoration-none">Sign In Portal</a>
+                </p>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

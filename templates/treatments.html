@@ -1,140 +1,97 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="alert alert-primary shadow-sm">
-
-    <strong>Integrated Patient Care Management System</strong>
-
-    <br>
-
-    Manage Patients, Doctors, Appointments, Treatments and Billing efficiently.
-
-</div>
-
-<div class="d-flex justify-content-between mb-3">
-
-<h2>💊 Treatments</h2>
-
-<a href="{{ url_for('add_treatment') }}"
-   class="btn btn-primary">
-
-   <i class="bi bi-plus-circle"></i> Add Treatment
-
-</a>
-
-</div>
-
-<div class="row mb-3">
-
-    <div class="col-md-4">
-
-        <input
-            type="text"
-            id="treatmentSearch"
-            class="form-control"
-            placeholder="🔍 Search Treatment...">
-
+<div class="alert alert-primary border-0 d-flex align-items-center gap-2 mb-4 py-3">
+    <i class="bi bi-info-circle-fill fs-5"></i>
+    <div>
+        <strong>Integrated Patient Care Management System:</strong> Log diagnoses, assign treatments and medicines, and store medical notes.
     </div>
-
 </div>
 
-<table class="table table-striped table-hover table-bordered align-middle" id="treatmentTable">
-
-    <thead class="table-primary">
-
-<thead>
-
-<tr>
-
-<th>Patient</th>
-
-<th>Diagnosis</th>
-
-<th>Medicines</th>
-
-<th>Date</th>
-<th>Actions</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for treatment in treatments %}
-
-<tr>
-
-<td>{{ treatment.patient.full_name }}</td>
-
-<td>{{ treatment.diagnosis }}</td>
-
-<td>{{ treatment.medicines }}</td>
-
-<td>{{ treatment.date }}</td>
-<td>
-
-<a href="{{ url_for('edit_treatment', id=treatment.id) }}"
-class="btn btn-warning btn-sm">
-
- <i class="bi bi-pencil-square"></i> Edit
-
-</a>
-
-<a href="{{ url_for('delete_treatment', id=treatment.id) }}"
-class="btn btn-danger btn-sm"
-onclick="return confirm('Delete this treatment?')">
-
-<i class="bi bi-trash"></i> Delete
-
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">💊 Treatments</h2>
+        <p class="text-muted mb-0 small">Overview of logged diagnoses and prescriptions</p>
+    </div>
+    <a href="{{ url_for('add_treatment') }}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle"></i> Add Treatment
     </a>
+</div>
 
-            </td>
+<!-- Search Box -->
+<div class="row mb-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="treatmentSearch"
+                class="form-control border-start-0 ps-0 bg-white"
+                placeholder="Search treatments database...">
+        </div>
+    </div>
+</div>
 
-        </tr>
-
-    {% else %}
-
-        <tr>
-
-            <td colspan="6" class="text-center text-muted">
-
-                No Treatments Available
-
-            </td>
-
-        </tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="treatmentTable">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Diagnosis</th>
+                        <th>Medicines</th>
+                        <th>Date</th>
+                        <th width="200" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for treatment in treatments %}
+                <tr>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ treatment.patient.full_name }}</span>
+                    </td>
+                    <td><span class="badge bg-primary-light text-primary">{{ treatment.diagnosis }}</span></td>
+                    <td>
+                        <span class="text-muted small"><i class="bi bi-prescription2 text-secondary me-1"></i>{{ treatment.medicines }}</span>
+                    </td>
+                    <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ treatment.date }}</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('edit_treatment', id=treatment.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a href="{{ url_for('delete_treatment', id=treatment.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Delete this treatment?')">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-5">
+                        <i class="bi bi-prescription fs-2 mb-2 d-block"></i>
+                        No Treatments Logged
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
 <script>
-
 document.getElementById("treatmentSearch").addEventListener("keyup", function() {
-
     let value = this.value.toLowerCase();
-
     let rows = document.querySelectorAll("#treatmentTable tbody tr");
-
     rows.forEach(function(row){
-
-        row.style.display =
-            row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
     });
-
 });
-
 </script>
-
 {% endblock %}

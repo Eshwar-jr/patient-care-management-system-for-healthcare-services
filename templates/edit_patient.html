@@ -1,25 +1,16 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="container mt-4">
-
-    <div class="card shadow">
-
-        <div class="card-header bg-primary text-white">
-
-            <h3>Edit Patient</h3>
-
+<div class="container py-2" style="max-width: 800px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Patient Details</h4>
         </div>
-
-        <div class="card-body">
-
+        <div class="card-body p-4">
             <form method="POST">
-
                 {{ form.hidden_tag() }}
 
                 <div class="row">
-
                     <div class="col-md-6 mb-3">
                         {{ form.full_name.label(class="form-label") }}
                         {{ form.full_name(class="form-control") }}
@@ -50,21 +41,20 @@
                         {{ form.address(class="form-control") }}
                     </div>
 
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-12 mb-4">
                         {{ form.disease.label(class="form-label") }}
                         {{ form.disease(class="form-control") }}
                     </div>
-
                 </div>
 
-                {{ form.submit(class="btn btn-warning", value="Update Patient") }}
-
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-warning px-4", value="Update Patient") }}
+                    <a href="{{ url_for('patients') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
             </form>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

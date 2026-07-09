@@ -1,30 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="text-center mt-5">
-
-<h1>🏥 Integrated Patient Care Management System</h1>
-
-<p class="lead">
-Manage Patients, Doctors, Nurses and Appointments
-efficiently.
-</p>
-
-<a href="{{ url_for('select_role') }}"
-class="btn btn-primary btn-lg">
-
-Login
-
-</a>
-
-<a href="{{ url_for('register') }}"
-class="btn btn-success btn-lg">
-
-Register
-
-</a>
-
+<div class="row align-items-center justify-content-center home-hero py-4">
+    <div class="col-lg-8 text-center">
+        <span class="badge bg-primary-light text-primary mb-3 px-3 py-2 fs-7 fw-semibold">
+            <i class="bi bi-shield-check"></i> Secure Hospital Portal
+        </span>
+        <h1 class="display-5 fw-bold text-dark mb-3">
+            Integrated Patient Care Management System
+        </h1>
+        <p class="lead text-muted mb-4 px-md-5">
+            A comprehensive, unified solution designed for healthcare professionals to manage patients, coordinate treatments, schedule appointments, and streamline billing operations efficiently.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+            <a href="{{ url_for('select_role') }}" class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-box-arrow-in-right"></i> Access Portal
+            </a>
+            <a href="{{ url_for('register') }}" class="btn btn-success btn-lg px-4">
+                <i class="bi bi-person-plus"></i> Create Account
+            </a>
+        </div>
+    </div>
 </div>
 
+<div class="row g-4 justify-content-center mt-2">
+    <div class="col-md-4 col-sm-6">
+        <div class="card p-3 h-100 shadow-sm border-0 text-center">
+            <div class="card-body">
+                <div class="text-primary mb-3"><i class="bi bi-people-fill fs-1"></i></div>
+                <h5 class="fw-bold">Patient Records</h5>
+                <p class="text-muted small">Access and manage comprehensive medical history, profile parameters, and contact info securely.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="card p-3 h-100 shadow-sm border-0 text-center">
+            <div class="card-body">
+                <div class="text-secondary mb-3"><i class="bi bi-calendar-check fs-1"></i></div>
+                <h5 class="fw-bold">Appointments</h5>
+                <p class="text-muted small">Coordinate clinic timetables, track schedules, and modify appointments dynamically.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="card p-3 h-100 shadow-sm border-0 text-center">
+            <div class="card-body">
+                <div class="text-info mb-3"><i class="bi bi-credit-card-2-front fs-1"></i></div>
+                <h5 class="fw-bold">Billing & Invoices</h5>
+                <p class="text-muted small">Monitor invoice releases, manage outstanding payments, and issue status records instantly.</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

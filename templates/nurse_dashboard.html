@@ -1,28 +1,26 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
     <div>
-        <h2>Nurse Dashboard</h2>
-        <p class="text-muted">
-            Welcome, {{ current_user.full_name }}
+        <h2 class="fw-bold text-dark mb-1">Nurse Dashboard</h2>
+        <p class="text-muted mb-0">
+            Welcome back, <span class="fw-semibold text-primary">{{ current_user.full_name }}</span>
         </p>
     </div>
-
-    <div>
-        <strong>{{ today }}</strong>
+    <div class="text-muted fs-7 bg-white px-3 py-2 rounded-3 border">
+        <i class="bi bi-calendar3 text-primary me-2"></i><strong>{{ today }}</strong>
     </div>
-
 </div>
 
 <!-- Statistics -->
-<div class="row mb-4">
-
+<div class="row g-4 mb-4">
     <div class="col-md-4">
-        <div class="card shadow text-center">
-            <div class="card-body">
+        <div class="card metric-card border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
                 <h5>Total Patients</h5>
                 <h2>{{ patient_count }}</h2>
             </div>
@@ -30,8 +28,11 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card shadow text-center">
-            <div class="card-body">
+        <div class="card metric-card appointment border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
                 <h5>Today's Appointments</h5>
                 <h2>{{ appointment_count }}</h2>
             </div>
@@ -39,132 +40,89 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card shadow text-center">
-            <div class="card-body">
-                <h5>Treatments</h5>
+        <div class="card metric-card treatment border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon">
+                    <i class="bi bi-capsule-pill"></i>
+                </div>
+                <h5>Treatments Logged</h5>
                 <h2>{{ treatment_count }}</h2>
             </div>
         </div>
     </div>
-
 </div>
 
-<!-- Recent Patients -->
-<div class="card shadow mb-4">
-
-    <div class="card-header bg-success text-white">
-
-        Recent Patients
-
+<div class="row g-4">
+    <!-- Recent Patients -->
+    <div class="col-lg-6">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-plus text-success me-2"></i>Recent Patients</h5>
+                <a href="{{ url_for('patients') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive border-0">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Disease</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for patient in recent_patients %}
+                            <tr>
+                                <td><span class="fw-semibold">{{ patient.full_name }}</span></td>
+                                <td>{{ patient.age }}</td>
+                                <td><span class="badge bg-primary-light text-primary">{{ patient.disease }}</span></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No Patients Found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="card-body">
-
-        <table class="table table-hover">
-
-            <thead>
-
-                <tr>
-
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Disease</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            {% for patient in recent_patients %}
-
-                <tr>
-
-                    <td>{{ patient.full_name }}</td>
-                    <td>{{ patient.age }}</td>
-                    <td>{{ patient.disease }}</td>
-
-                </tr>
-
-            {% else %}
-
-                <tr>
-
-                    <td colspan="3" class="text-center">
-
-                        No Patients Found
-
-                    </td>
-
-                </tr>
-
-            {% endfor %}
-
-            </tbody>
-
-        </table>
-
+    <!-- Recent Appointments -->
+    <div class="col-lg-6">
+        <div class="card border-0 h-100">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-check text-info me-2"></i>Today's Appointments</h5>
+                <a href="{{ url_for('appointments') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive border-0">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for appointment in recent_appointments %}
+                            <tr>
+                                <td><span class="fw-semibold">{{ appointment.patient.full_name }}</span></td>
+                                <td>{{ appointment.doctor_name }}</td>
+                                <td><span class="small text-muted">{{ appointment.appointment_date }}</span></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No Appointments Found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
-
-<!-- Recent Appointments -->
-<div class="card shadow">
-
-    <div class="card-header bg-info text-white">
-
-        Today's Appointments
-
-    </div>
-
-    <div class="card-body">
-
-        <table class="table table-hover">
-
-            <thead>
-
-                <tr>
-
-                    <th>Patient</th>
-                    <th>Doctor</th>
-                    <th>Date</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            {% for appointment in recent_appointments %}
-
-                <tr>
-
-                    <td>{{ appointment.patient.full_name }}</td>
-                    <td>{{ appointment.doctor_name }}</td>
-                    <td>{{ appointment.appointment_date }}</td>
-
-                </tr>
-
-            {% else %}
-
-                <tr>
-
-                    <td colspan="3" class="text-center">
-
-                        No Appointments Found
-
-                    </td>
-
-                </tr>
-
-            {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
 {% endblock %}

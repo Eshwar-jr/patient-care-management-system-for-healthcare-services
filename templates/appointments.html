@@ -1,161 +1,102 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <h2>📅 Appointments</h2>
-
-    <a href="{{ url_for('add_appointment') }}"
-       class="btn btn-primary">
-
-        <i class="bi bi-plus-circle"></i> Book Appointment
-
-    </a>
-
-</div>
-
-<div class="row mb-3">
-
-    <div class="col-md-4">
-
-        <input
-            type="text"
-            id="appointmentSearch"
-            class="form-control"
-            placeholder="🔍 Search Appointment...">
-
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">📅 Appointments</h2>
+        <p class="text-muted mb-0 small">Manage clinic schedule and appointment bookings</p>
     </div>
-
+    <a href="{{ url_for('add_appointment') }}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle"></i> Book Appointment
+    </a>
 </div>
 
-<table class="table table-striped table-hover table-bordered align-middle" id="appointmentTable">
-
-    <thead class="table-primary">
-
-        <tr>
-
-            <th>ID</th>
-            <th>Patient</th>
-            <th>Doctor</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Reason</th>
-            <th>Status</th>
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-    {% for appointment in appointments %}
-
-    <tr>
-
-        <td>{{ appointment.id }}</td>
-
-        <td>{{ appointment.patient.full_name }}</td>
-
-        <td>{{ appointment.doctor_name }}</td>
-
-        <td>{{ appointment.appointment_date }}</td>
-
-        <td>{{ appointment.appointment_time }}</td>
-
-        <td>{{ appointment.reason }}</td>
-
-        <td>
-
-            <span class="badge bg-success">
-
-                {% if appointment.status == "Booked" %}
-
-                 <span class="badge bg-primary">
-                      Booked
-                 </span>
-
-                {% elif appointment.status == "Completed" %}
-
-                <span class="badge bg-success">
-                    Completed
-                </span>
-
-                {% else %}
-
-                <span class="badge bg-danger">
-                    Cancelled
-                </span>
-
-            {% endif %}
-
+<!-- Search Box -->
+<div class="row mb-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-search"></i>
             </span>
+            <input
+                type="text"
+                id="appointmentSearch"
+                class="form-control border-start-0 ps-0 bg-white"
+                placeholder="Search appointments database...">
+        </div>
+    </div>
+</div>
 
-        </td>
-
-<td>
-
-    <a href="{{ url_for('edit_appointment', id=appointment.id) }}"
-       class="btn btn-warning btn-sm">
-
-        <i class="bi bi-pencil-square"></i> Edit
-
-    </a>
-
-    <a href="{{ url_for('delete_appointment', id=appointment.id) }}"
-       class="btn btn-danger btn-sm"
-       onclick="return confirm('Delete this appointment?')">
-
-        <i class="bi bi-trash"></i> Delete
-
-     </a>
-
-            </td>
-
-        </tr>
-
-    {% else %}
-
-        <tr>
-
-            <td colspan="6" class="text-center text-muted">
-
-                No Appointments Available
-
-            </td>
-
-        </tr>
-
-    {% endfor %}
-
-    </tbody>
-
-</table>
-
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="appointmentTable">
+                <thead>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th width="200" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td class="text-muted fw-bold">#{{ appointment.id }}</td>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ appointment.patient.full_name }}</span>
+                    </td>
+                    <td><span class="text-secondary fw-500">{{ appointment.doctor_name }}</span></td>
+                    <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ appointment.appointment_date }}</td>
+                    <td><i class="bi bi-clock text-muted me-1 small"></i>{{ appointment.appointment_time }}</td>
+                    <td><span class="text-muted small">{{ appointment.reason }}</span></td>
+                    <td>
+                        {% if appointment.status == "Booked" %}
+                            <span class="badge bg-booked">Booked</span>
+                        {% elif appointment.status == "Completed" %}
+                            <span class="badge bg-completed">Completed</span>
+                        {% else %}
+                            <span class="badge bg-cancelled">Cancelled</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('edit_appointment', id=appointment.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a href="{{ url_for('delete_appointment', id=appointment.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Delete this appointment?')">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted py-5">
+                        <i class="bi bi-calendar-x fs-2 mb-2 d-block"></i>
+                        No Appointments Scheduled
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
 <script>
-
 document.getElementById("appointmentSearch").addEventListener("keyup", function() {
-
     let value = this.value.toLowerCase();
-
     let rows = document.querySelectorAll("#appointmentTable tbody tr");
-
     rows.forEach(function(row){
-
-        row.style.display =
-            row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
     });
-
 });
-
 </script>
-
 {% endblock %}

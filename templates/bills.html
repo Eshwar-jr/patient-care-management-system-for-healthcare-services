@@ -1,143 +1,105 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="alert alert-primary shadow-sm">
-
-    <strong>Integrated Patient Care Management System</strong>
-
-    <br>
-
-    Manage Patients, Doctors, Appointments, Treatments and Billing efficiently.
-
-</div>
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <h2>💳 Billing Management</h2>
-
-    <a href="{{ url_for('add_bill') }}"
-       class="btn btn-primary">
-
-        <i class="bi bi-plus-circle"></i>  Add Bill
-
-    </a>
-
-</div>
-
-<div class="row mb-3">
-
-    <div class="col-md-4">
-
-        <input
-            type="text"
-            id="billSearch"
-            class="form-control"
-            placeholder="🔍 Search Bill...">
-
+<div class="alert alert-primary border-0 d-flex align-items-center gap-2 mb-4 py-3">
+    <i class="bi bi-info-circle-fill fs-5"></i>
+    <div>
+        <strong>Integrated Patient Care Management System:</strong> Track billing records, generate patient invoices, and manage payment collection status.
     </div>
-
 </div>
 
-<table class="table table-striped table-hover table-bordered align-middle" id="billTable">
-
-<thead class="table-primary">
-
-<tr>
-
-<th>ID</th>
-<th>Patient</th>
-<th>Amount</th>
-<th>Status</th>
-<th>Date</th>
-<th>Actions</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for bill in bills %}
-
-<tr>
-
-<td>{{ bill.id }}</td>
-
-<td>{{ bill.patient.full_name }}</td>
-
-<td>₹ {{ bill.amount }}</td>
-
-<td>
-
-<span class="badge bg-success">
-
-{{ bill.payment_status }}
-
-</span>
-
-</td>
-
-<td>{{ bill.bill_date }}</td>
-
-<td>
-
-<a href="{{ url_for('edit_bill', id=bill.id) }}"
-class="btn btn-warning btn-sm">
-
-<i class="bi bi-pencil-square"></i> 
-
-</a>
-
-<a href="{{ url_for('delete_bill', id=bill.id) }}"
-class="btn btn-danger btn-sm"
-onclick="return confirm('Delete this bill?')">
-
- <i class="bi bi-trash"></i> Delete
-
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">💳 Billing Management</h2>
+        <p class="text-muted mb-0 small">Overview of clinic financial records and invoices</p>
+    </div>
+    <a href="{{ url_for('add_bill') }}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle"></i> Add Bill
     </a>
+</div>
 
-            </td>
+<!-- Search Box -->
+<div class="row mb-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="billSearch"
+                class="form-control border-start-0 ps-0 bg-white"
+                placeholder="Search bills database...">
+        </div>
+    </div>
+</div>
 
-        </tr>
-
-    {% else %}
-
-        <tr>
-
-            <td colspan="6" class="text-center text-muted">
-
-                No Bills Available
-
-            </td>
-
-        </tr>
-
-    {% endfor %}
-
-</tbody>
-
-</table>
-
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="billTable">
+                <thead>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Patient</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th width="200" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for bill in bills %}
+                <tr>
+                    <td class="text-muted fw-bold">#{{ bill.id }}</td>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ bill.patient.full_name }}</span>
+                    </td>
+                    <td class="fw-bold text-dark">₹ {{ "{:,.2f}".format(bill.amount) }}</td>
+                    <td>
+                        {% if bill.payment_status == 'Paid' %}
+                            <span class="badge bg-paid">Paid</span>
+                        {% elif bill.payment_status == 'Pending' %}
+                            <span class="badge bg-pending">Pending</span>
+                        {% else %}
+                            <span class="badge bg-unpaid">{{ bill.payment_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ bill.bill_date }}</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('edit_bill', id=bill.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a href="{{ url_for('delete_bill', id=bill.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Delete this bill?')">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-credit-card-2-back fs-2 mb-2 d-block"></i>
+                        No Bills Available
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
+{% block scripts %}
 <script>
-
 document.getElementById("billSearch").addEventListener("keyup", function() {
-
     let value = this.value.toLowerCase();
-
     let rows = document.querySelectorAll("#billTable tbody tr");
-
     rows.forEach(function(row){
-
-        row.style.display =
-            row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
     });
-
 });
-
 </script>
+{% endblock %}

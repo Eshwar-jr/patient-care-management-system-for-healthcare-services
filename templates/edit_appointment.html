@@ -1,70 +1,43 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="container mt-4">
-
-    <div class="card shadow">
-
-        <div class="card-header bg-primary text-white">
-
-            <h3>Edit Appointment</h3>
-
+<div class="container py-2" style="max-width: 600px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-calendar-event me-2"></i>Edit Appointment</h4>
         </div>
-
-        <div class="card-body">
-
+        <div class="card-body p-4">
             <form method="POST">
-
                 {{ form.hidden_tag() }}
 
-               <div class="mb-3">
+                <div class="mb-3">
                     {{ form.reason.label(class="form-label") }}
                     {{ form.reason(class="form-control") }}
                 </div>
 
+                <div class="mb-4">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" name="status">
+                        <option value="Booked" {% if appointment.status == "Booked" %}selected{% endif %}>
+                            Booked
+                        </option>
+                        <option value="Completed" {% if appointment.status == "Completed" %}selected{% endif %}>
+                            Completed
+                        </option>
+                        <option value="Cancelled" {% if appointment.status == "Cancelled" %}selected{% endif %}>
+                            Cancelled
+                        </option>
+                    </select>
+                </div>
 
-            <div class="mb-3">
-
-                 <label class="form-label">Status</label>
-
-                 <select class="form-select" name="status">
-
-                    <option value="Booked"
-                    {% if appointment.status == "Booked" %}selected{% endif %}>
-                       Booked
-                    </option>
-
-                    <option value="Completed"
-                    {% if appointment.status == "Completed" %}selected{% endif %}>
-                       Completed
-                    </option>
-
-                    <option value="Cancelled"
-                    {% if appointment.status == "Cancelled" %}selected{% endif %}>
-                       Cancelled
-                    </option>
-
-    </select>
-
-</div>
-
-{{ form.submit(value="Update Appointment",
-class="btn btn-warning") }}
-
-<a href="{{ url_for('appointments') }}"
-class="btn btn-secondary">
-
-    Cancel
-
-</a>
-
+                <div class="d-flex gap-2">
+                    {{ form.submit(value="Update Appointment", class="btn btn-warning px-4") }}
+                    <a href="{{ url_for('appointments') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
             </form>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

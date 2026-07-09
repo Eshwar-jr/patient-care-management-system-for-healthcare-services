@@ -1,59 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="container mt-5">
-
-    <div class="text-center">
-
-        <h2>🏥 Integrated Patient Care Management System</h2>
-
-        <p class="lead">
-            Please choose your role to continue
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark mb-2">Integrated Patient Care Portal</h2>
+        <p class="lead text-muted">
+            Please select your authorization role to login to the system
         </p>
-
     </div>
 
-    <div class="row justify-content-center mt-4">
-
-        <div class="col-md-6">
-
-            <div class="d-grid gap-3">
-
-                <a href="{{ url_for('login', role='admin') }}"
-                   class="btn btn-primary btn-lg">
-
-                    🛡 Admin Login
-
-                </a>
-
-                <a href="{{ url_for('login', role='doctor') }}"
-                   class="btn btn-success btn-lg">
-
-                    👨‍⚕️ Doctor Login
-
-                </a>
-
-                <a href="{{ url_for('login', role='nurse') }}"
-                   class="btn btn-secondary btn-lg">
-
-                    👩‍⚕️ Nurse Login
-
-                </a>
-
-                <a href="{{ url_for('login', role='patient') }}"
-                   class="btn btn-warning btn-lg">
-
-                    👤 Patient Login
-
-                </a>
-
-            </div>
-
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center mt-3">
+        <div class="col">
+            <a href="{{ url_for('login', role='admin') }}" class="role-card">
+                <div class="icon text-primary">🛡️</div>
+                <h4>Administrator</h4>
+                <p>System settings, user accounts (doctors & nurses), and aggregate hospital operations monitoring.</p>
+            </a>
+        </div>
+        
+        <div class="col">
+            <a href="{{ url_for('login', role='doctor') }}" class="role-card">
+                <div class="icon text-success">👨‍⚕️</div>
+                <h4>Medical Doctor</h4>
+                <p>Patient diagnosis records, clinical treatments logging, scheduling appointments, and patient profiles.</p>
+            </a>
         </div>
 
+        <div class="col">
+            <a href="{{ url_for('login', role='nurse') }}" class="role-card">
+                <div class="icon text-info">👩‍⚕️</div>
+                <h4>Nurse Assistant</h4>
+                <p>Registering patient parameters, updating appointments info, and logging vital details.</p>
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{{ url_for('login', role='patient') }}" class="role-card">
+                <div class="icon text-warning">👤</div>
+                <h4>Patient Portal</h4>
+                <p>Review personal health logs, clinical treatment schedules, appointments history, and billing records.</p>
+            </a>
+        </div>
     </div>
-
 </div>
-
 {% endblock %}

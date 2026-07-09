@@ -1,33 +1,24 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="container mt-4">
-
-    <div class="card shadow">
-
-        <div class="card-header bg-primary text-white">
-
-            <h3>Add New Patient</h3>
-
+<div class="container py-2" style="max-width: 800px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-person-plus me-2"></i>Add New Patient</h4>
         </div>
-
-        <div class="card-body">
-
+        <div class="card-body p-4">
             <form method="POST">
-
                 {{ form.hidden_tag() }}
 
                 <div class="row">
-
                     <div class="col-md-6 mb-3">
                         {{ form.full_name.label(class="form-label") }}
-                        {{ form.full_name(class="form-control") }}
+                        {{ form.full_name(class="form-control", placeholder="John Doe") }}
                     </div>
 
                     <div class="col-md-3 mb-3">
                         {{ form.age.label(class="form-label") }}
-                        {{ form.age(class="form-control") }}
+                        {{ form.age(class="form-control", placeholder="30") }}
                     </div>
 
                     <div class="col-md-3 mb-3">
@@ -37,7 +28,7 @@
 
                     <div class="col-md-6 mb-3">
                         {{ form.phone.label(class="form-label") }}
-                        {{ form.phone(class="form-control") }}
+                        {{ form.phone(class="form-control", placeholder="123-456-7890") }}
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -47,24 +38,23 @@
 
                     <div class="col-md-12 mb-3">
                         {{ form.address.label(class="form-label") }}
-                        {{ form.address(class="form-control") }}
+                        {{ form.address(class="form-control", placeholder="123 Health St, Clinical City") }}
                     </div>
 
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-12 mb-4">
                         {{ form.disease.label(class="form-label") }}
-                        {{ form.disease(class="form-control") }}
+                        {{ form.disease(class="form-control", placeholder="Influenza / General Checkup") }}
                     </div>
-
                 </div>
 
-                {{ form.submit(class="btn btn-success") }}
-
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-success px-4") }}
+                    <a href="{{ url_for('patients') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
             </form>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}

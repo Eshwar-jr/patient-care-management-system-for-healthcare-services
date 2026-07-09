@@ -1,44 +1,75 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="card shadow">
-
-<div class="card-header bg-primary text-white">
-
-<h3>Patient Profile</h3>
-
+<div class="mb-4">
+    <a href="{{ url_for('patients') }}" class="btn btn-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Back to Patients
+    </a>
 </div>
 
-<div class="card-body">
+<div class="card border-0 shadow-sm overflow-hidden">
+    <div class="card-header bg-dark text-white d-flex align-items-center gap-3 py-4">
+        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+            <i class="bi bi-person-fill fs-2 text-white"></i>
+        </div>
+        <div>
+            <h3 class="fw-bold mb-1">{{ patient.full_name }}</h3>
+            <span class="badge bg-primary-light text-primary">Patient ID: #{{ patient.id }}</span>
+            <span class="badge bg-light text-dark border ms-1">{{ patient.gender }}</span>
+        </div>
+    </div>
+    
+    <div class="card-body p-4">
+        <h5 class="fw-bold text-dark border-bottom pb-2 mb-4">
+            <i class="bi bi-file-earmark-medical text-primary me-2"></i>Clinical & Demographics Information
+        </h5>
+        
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="p-3 bg-light rounded-3">
+                    <div class="text-muted small mb-1">Age</div>
+                    <div class="fs-5 fw-semibold text-dark">{{ patient.age if patient.age else 'N/A' }} years</div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="p-3 bg-light rounded-3">
+                    <div class="text-muted small mb-1">Blood Group</div>
+                    <div class="fs-5 fw-semibold text-danger">{{ patient.blood_group if patient.blood_group else 'N/A' }}</div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="p-3 bg-light rounded-3">
+                    <div class="text-muted small mb-1">Current Diagnosis</div>
+                    <div class="fs-5 fw-semibold text-primary">{{ patient.disease if patient.disease else 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
 
-<table class="table">
+        <h5 class="fw-bold text-dark border-bottom pb-2 mb-4">
+            <i class="bi bi-telephone text-primary me-2"></i>Contact Details
+        </h5>
 
-<tr><th>Name</th><td>{{ patient.full_name }}</td></tr>
-
-<tr><th>Age</th><td>{{ patient.age }}</td></tr>
-
-<tr><th>Gender</th><td>{{ patient.gender }}</td></tr>
-
-<tr><th>Phone</th><td>{{ patient.phone }}</td></tr>
-
-<tr><th>Blood Group</th><td>{{ patient.blood_group }}</td></tr>
-
-<tr><th>Disease</th><td>{{ patient.disease }}</td></tr>
-
-<tr><th>Address</th><td>{{ patient.address }}</td></tr>
-
-</table>
-
-<a href="{{ url_for('patients') }}"
-class="btn btn-secondary">
-
-Back
-
-</a>
-
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 h-100">
+                    <div class="text-muted small mb-1">Phone Number</div>
+                    <div class="fs-5 fw-semibold text-dark">
+                        <i class="bi bi-phone text-muted me-2"></i>{{ patient.phone if patient.phone else 'N/A' }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 h-100">
+                    <div class="text-muted small mb-1">Address</div>
+                    <div class="fs-6 fw-semibold text-dark">
+                        <i class="bi bi-geo-alt text-muted me-2"></i>{{ patient.address if patient.address else 'N/A' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-</div>
-
 {% endblock %}

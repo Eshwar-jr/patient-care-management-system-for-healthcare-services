@@ -1,76 +1,75 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-
-<div class="container mt-4">
-
-    <div class="card shadow">
-
-        <div class="card-header bg-warning">
-
-            <h3>Edit Nurse</h3>
-
+<div class="container py-2" style="max-width: 600px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Nurse Details</h4>
         </div>
-
-        <div class="card-body">
-
+        <div class="card-body p-4">
             <form method="POST">
-
                 <div class="mb-3">
-                    <label>Full Name</label>
-                    <input
-                        type="text"
-                        name="full_name"
-                        class="form-control"
-                        value="{{ nurse.full_name }}"
-                        required>
+                    <label class="form-label">Full Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                        <input
+                            type="text"
+                            name="full_name"
+                            class="form-control"
+                            value="{{ nurse.full_name }}"
+                            required>
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <label>Username</label>
-                    <input
-                        type="text"
-                        name="username"
-                        class="form-control"
-                        value="{{ nurse.username }}"
-                        required>
+                    <label class="form-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person-badge"></i></span>
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            value="{{ nurse.username }}"
+                            required>
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        value="{{ nurse.email }}"
-                        required>
+                    <label class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ nurse.email }}"
+                            required>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label>Phone</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        class="form-control"
-                        value="{{ nurse.phone }}"
-                        required>
+                <div class="mb-4">
+                    <label class="form-label">Phone</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-telephone"></i></span>
+                        <input
+                            type="text"
+                            name="phone"
+                            class="form-control"
+                            value="{{ nurse.phone }}"
+                            required>
+                    </div>
                 </div>
 
-                <button class="btn btn-warning">
-                    Update Nurse
-                </button>
-
-                <a href="{{ url_for('nurses') }}"
-                   class="btn btn-secondary">
-                    Cancel
-                </a>
-
+                <div class="d-flex gap-2">
+                    <button class="btn btn-warning px-4">
+                        Update Nurse
+                    </button>
+                    <a href="{{ url_for('nurses') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
             </form>
-
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
