@@ -1,0 +1,195 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Patient Dashboard</h2>
+        <p class="text-muted mb-0">
+            Welcome back, <span class="fw-semibold text-primary">{{ current_user.full_name }}</span>
+        </p>
+    </div>
+    <div class="text-muted fs-7 bg-white px-3 py-2 rounded-3 border">
+        <i class="bi bi-calendar3 text-primary me-2"></i><strong>{{ today }}</strong>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card metric-card appointment border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <h5>My Appointments</h5>
+                <h2>{{ appointment_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card metric-card treatment border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon">
+                    <i class="bi bi-capsule-pill"></i>
+                </div>
+                <h5>My Treatments</h5>
+                <h2>{{ treatment_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card metric-card bill border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon">
+                    <i class="bi bi-credit-card"></i>
+                </div>
+                <h5>My Bills</h5>
+                <h2>{{ bill_count }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Upcoming Appointments -->
+    <div class="col-lg-6">
+        <div class="card border-0 h-100 shadow-sm">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-check text-warning me-2"></i>Upcoming Appointments</h5>
+                <a href="{{ url_for('appointments') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive border-0">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for appt in upcoming_appointments %}
+                            <tr>
+                                <td><span class="fw-semibold text-secondary">Dr. {{ appt.doctor_name }}</span></td>
+                                <td>
+                                    <div class="small fw-500">{{ appt.appointment_date }}</div>
+                                    <div class="text-muted small">{{ appt.appointment_time }}</div>
+                                </td>
+                                <td><span class="text-muted small">{{ appt.reason }}</span></td>
+                                <td>
+                                    {% if appt.status == "Booked" %}
+                                        <span class="badge bg-booked">Booked</span>
+                                    {% elif appt.status == "Completed" %}
+                                        <span class="badge bg-completed">Completed</span>
+                                    {% else %}
+                                        <span class="badge bg-cancelled">{{ appt.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if appt.status in ["Booked", "Scheduled"] %}
+                                        <a href="{{ url_for('cancel_appointment', id=appt.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Cancel this appointment?')">
+                                            Cancel
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">No upcoming appointments</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Treatments -->
+    <div class="col-lg-6">
+        <div class="card border-0 h-100 shadow-sm">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-capsule text-info me-2"></i>Recent Treatments</h5>
+                <a href="{{ url_for('treatments') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive border-0">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Diagnosis</th>
+                                <th>Medicines</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for treat in recent_treatments %}
+                            <tr>
+                                <td><span class="badge bg-primary-light text-primary">{{ treat.diagnosis }}</span></td>
+                                <td><span class="text-muted small">{{ treat.medicines }}</span></td>
+                                <td><span class="small text-muted">{{ treat.date }}</span></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No treatments logged</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bills Summary -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
+        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-credit-card-2-back text-danger me-2"></i>My Invoices / Bills</h5>
+        <a href="{{ url_for('bills') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All Bills</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive border-0">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th width="100">Bill ID</th>
+                        <th>Bill Date</th>
+                        <th>Amount</th>
+                        <th>Payment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for bill in bills %}
+                    <tr>
+                        <td class="text-muted fw-bold">#{{ bill.id }}</td>
+                        <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ bill.bill_date }}</td>
+                        <td class="fw-bold text-dark">₹ {{ "{:,.2f}".format(bill.amount) }}</td>
+                        <td>
+                            {% if bill.payment_status == 'Paid' %}
+                                <span class="badge bg-paid">Paid</span>
+                            {% elif bill.payment_status == 'Pending' %}
+                                <span class="badge bg-pending">Pending</span>
+                            {% else %}
+                                <span class="badge bg-unpaid">{{ bill.payment_status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">No billing history found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

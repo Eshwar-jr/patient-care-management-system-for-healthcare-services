@@ -3,11 +3,28 @@ from app import app
 from extensions import db
 from models import Patient, Appointment, Treatment, Bill, User
 from forms import PatientForm, AppointmentForm, TreatmentForm, BillingForm
-from flask_login import login_required
+from flask_login import login_required, current_user
 from datetime import date
 
-
-from datetime import date
+def get_patient_for_user(user):
+    patient = None
+    if user.phone:
+        patient = Patient.query.filter_by(phone=user.phone).first()
+    if not patient:
+        patient = Patient.query.filter_by(full_name=user.full_name).first()
+    if not patient:
+        patient = Patient(
+            full_name=user.full_name,
+            phone=user.phone,
+            age=None,
+            gender=None,
+            address=None,
+            blood_group=None,
+            disease=None
+        )
+        db.session.add(patient)
+        db.session.commit()
+    return patient
 
 @app.route("/doctor")
 @login_required
@@ -47,6 +64,9 @@ def doctor_dashboard():
 @app.route("/patient/add", methods=["GET", "POST"])
 @login_required
 def add_patient():
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     form = PatientForm()
 
@@ -79,6 +99,9 @@ def add_patient():
 @app.route("/patient/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_patient(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     patient = Patient.query.get_or_404(id)
 
@@ -108,6 +131,9 @@ def edit_patient(id):
 @app.route("/patient/delete/<int:id>")
 @login_required
 def delete_patient(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     patient = Patient.query.get_or_404(id)
 
@@ -122,6 +148,11 @@ def delete_patient(id):
 @app.route("/patient/<int:id>")
 @login_required
 def patient_profile(id):
+    if current_user.role.lower() == 'patient':
+        patient = get_patient_for_user(current_user)
+        if patient.id != id:
+            flash("Access denied.", "danger")
+            return redirect(url_for("patient_profile_view"))
 
     patient = Patient.query.get_or_404(id)
 
@@ -134,11 +165,82 @@ def patient_profile(id):
 @app.route("/patient")
 @login_required
 def patient_dashboard():
-    return "<h2>Patient Dashboard</h2>"
+    if current_user.role.lower() != 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("home"))
+
+    patient = get_patient_for_user(current_user)
+
+    # Metrics
+    appointment_count = Appointment.query.filter_by(patient_id=patient.id).count()
+    treatment_count = Treatment.query.filter_by(patient_id=patient.id).count()
+    bill_count = Bill.query.filter_by(patient_id=patient.id).count()
+
+    # Upcoming Appointments
+    upcoming_appointments = Appointment.query.filter(
+        Appointment.patient_id == patient.id,
+        Appointment.status.in_(["Booked", "Scheduled"])
+    ).order_by(Appointment.appointment_date.asc(), Appointment.appointment_time.asc()).limit(5).all()
+
+    # Recent Treatments
+    recent_treatments = Treatment.query.filter_by(patient_id=patient.id).order_by(Treatment.date.desc()).limit(5).all()
+
+    # Bills
+    bills = Bill.query.filter_by(patient_id=patient.id).order_by(Bill.bill_date.desc()).all()
+
+    return render_template(
+        "patient_dashboard.html",
+        patient=patient,
+        appointment_count=appointment_count,
+        treatment_count=treatment_count,
+        bill_count=bill_count,
+        upcoming_appointments=upcoming_appointments,
+        recent_treatments=recent_treatments,
+        bills=bills,
+        today=date.today()
+    )
+
+@app.route("/patient/profile", methods=["GET", "POST"])
+@login_required
+def patient_profile_view():
+    if current_user.role.lower() != 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("home"))
+
+    patient = get_patient_for_user(current_user)
+
+    if request.method == "POST":
+        phone = request.form.get("phone")
+        address = request.form.get("address")
+        email = request.form.get("email")
+
+        if not phone or not address or not email:
+            flash("Phone, address, and email are required.", "danger")
+        else:
+            email_check = User.query.filter(User.email == email, User.id != current_user.id).first()
+            if email_check:
+                flash("Email address is already in use by another user.", "danger")
+            else:
+                current_user.phone = phone
+                current_user.email = email
+                patient.phone = phone
+                patient.address = address
+                db.session.commit()
+                flash("Profile updated successfully!", "success")
+                return redirect(url_for("patient_profile_view"))
+
+    return render_template(
+        "patient_profile.html",
+        patient=patient,
+        user=current_user
+    )
 
 @app.route("/patients")
 @login_required
 def patients():
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     search = request.args.get("search")
 
@@ -160,59 +262,50 @@ def patients():
 @app.route("/appointments/add", methods=["GET", "POST"])
 @login_required
 def add_appointment():
-
     form = AppointmentForm()
+    
+    is_patient = current_user.role.lower() == 'patient'
+    patient = None
+    
+    if is_patient:
+        patient = get_patient_for_user(current_user)
+        form.patient.choices = [(patient.id, patient.full_name)]
+        form.patient.data = patient.id
+    else:
+        patients = Patient.query.all()
+        form.patient.choices = [(p.id, p.full_name) for p in patients]
 
-    #dropdown
-
-    patients = Patient.query.all()
-
-    print("=" * 50)
-    print("Patients found:", len(patients))
-
-    form.patient.choices = []
-
-    for p in patients:
-       print(f"ID: {p.id}, Name: {p.full_name}")
-       form.patient.choices.append((p.id, p.full_name))
-
-    print("Dropdown choices:", form.patient.choices)
-    print("=" * 50)
+    doctors = User.query.filter(User.role.ilike('doctor')).all()
 
     if form.validate_on_submit():
-
         appointment = Appointment(
-
             patient_id=form.patient.data,
-
             doctor_name=form.doctor_name.data,
-
             appointment_date=form.appointment_date.data,
-
             appointment_time=form.appointment_time.data,
-
-            reason=form.reason.data
-
+            reason=form.reason.data,
+            status="Booked" if is_patient else "Scheduled"
         )
-
         db.session.add(appointment)
-
         db.session.commit()
-
         flash("Appointment booked successfully!", "success")
-
         return redirect(url_for("appointments"))
 
     return render_template(
         "add_appointment.html",
-        form=form
+        form=form,
+        doctors=doctors,
+        patient_id=patient.id if is_patient else None
     )
 
 @app.route("/appointments")
 @login_required
 def appointments():
-
-    appointments = Appointment.query.all()
+    if current_user.role.lower() == 'patient':
+        patient = get_patient_for_user(current_user)
+        appointments = Appointment.query.filter_by(patient_id=patient.id).all()
+    else:
+        appointments = Appointment.query.all()
 
     return render_template(
         "appointments.html",
@@ -222,8 +315,15 @@ def appointments():
 @app.route("/appointments/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_appointment(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     appointment = Appointment.query.get_or_404(id)
+
+    if appointment.status == "Completed":
+        flash("Completed appointments cannot be edited.", "danger")
+        return redirect(url_for("appointments"))
 
     form = AppointmentForm(obj=appointment)
 
@@ -233,51 +333,71 @@ def edit_appointment(id):
     ]
 
     if form.validate_on_submit():
-
-        if form.validate_on_submit():
-
-             appointment.patient_id = form.patient.data
-             appointment.doctor_name = form.doctor_name.data
-             appointment.appointment_date = form.appointment_date.data
-             appointment.appointment_time = form.appointment_time.data
-             appointment.reason = form.reason.data
-
-
-             appointment.status = request.form["status"]
-
-             db.session.commit()
-
-    flash("Appointment updated successfully!", "success")
-
-    return redirect(url_for("appointments"))
+        appointment.patient_id = form.patient.data
+        appointment.doctor_name = form.doctor_name.data
+        appointment.appointment_date = form.appointment_date.data
+        appointment.appointment_time = form.appointment_time.data
+        appointment.reason = form.reason.data
+        appointment.status = request.form["status"]
+        db.session.commit()
+        flash("Appointment updated successfully!", "success")
+        return redirect(url_for("appointments"))
 
     return render_template(
-    "edit_appointment.html",
-    form=form,
-    appointment=appointment
-)
+        "edit_appointment.html",
+        form=form,
+        appointment=appointment
+    )
 
 @app.route("/appointments/delete/<int:id>")
 @login_required
 def delete_appointment(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     appointment = Appointment.query.get_or_404(id)
 
-    db.session.delete(appointment)
+    if appointment.status == "Completed":
+        flash("Completed appointments cannot be deleted.", "danger")
+        return redirect(url_for("appointments"))
 
+    db.session.delete(appointment)
     db.session.commit()
 
     flash("Appointment deleted successfully!", "success")
-
     return redirect(url_for("appointments"))
+
+@app.route("/appointments/cancel/<int:id>")
+@login_required
+def cancel_appointment(id):
+    appointment = Appointment.query.get_or_404(id)
+    
+    if current_user.role.lower() == 'patient':
+        patient = get_patient_for_user(current_user)
+        if appointment.patient_id != patient.id:
+            flash("You are not authorized to cancel this appointment.", "danger")
+            return redirect(url_for("appointments"))
+            
+    if appointment.status == "Completed":
+        flash("Completed appointments cannot be cancelled.", "danger")
+        return redirect(url_for("appointments"))
+        
+    appointment.status = "Cancelled"
+    db.session.commit()
+    flash("Appointment cancelled successfully!", "success")
+    return redirect(request.referrer or url_for("appointments"))
 
 #TREATMENTS
 
 @app.route("/treatments")
 @login_required
 def treatments():
-
-    treatments = Treatment.query.all()
+    if current_user.role.lower() == 'patient':
+        patient = get_patient_for_user(current_user)
+        treatments = Treatment.query.filter_by(patient_id=patient.id).all()
+    else:
+        treatments = Treatment.query.all()
 
     return render_template(
         "treatments.html",
@@ -287,6 +407,9 @@ def treatments():
 @app.route("/treatments/add", methods=["GET", "POST"])
 @login_required
 def add_treatment():
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     form = TreatmentForm()
 
@@ -330,6 +453,9 @@ def add_treatment():
 @app.route("/treatments/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_treatment(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     treatment = Treatment.query.get_or_404(id)
 
@@ -362,6 +488,9 @@ def edit_treatment(id):
 @app.route("/treatments/delete/<int:id>")
 @login_required
 def delete_treatment(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     treatment = Treatment.query.get_or_404(id)
 
@@ -377,8 +506,11 @@ def delete_treatment(id):
 @app.route("/bills")
 @login_required
 def bills():
-
-    bills = Bill.query.all()
+    if current_user.role.lower() == 'patient':
+        patient = get_patient_for_user(current_user)
+        bills = Bill.query.filter_by(patient_id=patient.id).all()
+    else:
+        bills = Bill.query.all()
 
     return render_template(
         "bills.html",
@@ -388,6 +520,9 @@ def bills():
 @app.route("/bills/add", methods=["GET", "POST"])
 @login_required
 def add_bill():
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     form = BillingForm()
 
@@ -426,6 +561,9 @@ def add_bill():
 @app.route("/bills/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_bill(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     bill = Bill.query.get_or_404(id)
 
@@ -457,6 +595,9 @@ def edit_bill(id):
 @app.route("/bills/delete/<int:id>")
 @login_required
 def delete_bill(id):
+    if current_user.role.lower() == 'patient':
+        flash("Access denied.", "danger")
+        return redirect(url_for("patient_dashboard"))
 
     bill = Bill.query.get_or_404(id)
 

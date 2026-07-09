@@ -1,36 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center py-4">
+<div class="row justify-content-center py-5">
     <div class="col-md-5 col-lg-4">
-        <div class="card border-0 shadow-lg mt-4">
-            <div class="card-header bg-dark text-white text-center py-4">
-                <div class="fs-1 mb-2">
-                    {% if role == 'admin' %}🛡️{% elif role == 'doctor' %}👨‍⚕️{% elif role == 'nurse' %}👩‍⚕️{% else %}👤{% endif %}
-                </div>
-                <h3 class="fw-bold mb-0">
-                    {{ role.title() }} Portal
-                </h3>
-                <p class="text-muted-light small mb-0 mt-1">Please enter your clinical credentials</p>
-            </div>
+        <!-- Clean, minimal login card -->
+        <div class="card border border-light-subtle shadow-sm mt-3" style="border-radius: var(--radius-md);">
             <div class="card-body p-4">
+                <!-- Branding Header -->
+                <div class="text-center mb-4">
+                    <span class="fs-4">🏥</span>
+                    <h4 class="fw-bold text-dark mt-2 mb-1">
+                        {{ role.title() }} Portal Login
+                    </h4>
+                    <p class="text-muted small mb-0">Integrated Patient Care Management System</p>
+                </div>
+                
                 <form method="POST">
                     {{ form.hidden_tag() }}
                     
                     <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
-                            {{ form.email(class="form-control border-start-0 ps-0 bg-light-focus", placeholder="name@hospital.com") }}
-                        </div>
+                        {{ form.email.label(class="form-label text-dark fw-500") }}
+                        {{ form.email(class="form-control bg-light-focus", placeholder="name@hospital.com", required=true, autofocus=true) }}
                     </div>
                     
                     <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
-                            {{ form.password(class="form-control border-start-0 ps-0 bg-light-focus", placeholder="••••••••") }}
-                        </div>
+                        {{ form.password.label(class="form-label text-dark fw-500") }}
+                        {{ form.password(class="form-control bg-light-focus", placeholder="••••••••", required=true) }}
                     </div>
                     
                     <div class="form-check mb-4">
@@ -38,20 +33,23 @@
                         {{ form.remember.label(class="form-check-label text-muted small") }}
                     </div>
                     
-                    {{ form.submit(class="btn btn-primary w-100 py-2 fs-6") }}
+                    {{ form.submit(class="btn btn-primary w-100 py-2 fs-6 fw-500") }}
                 </form>
                 
-                <hr class="my-4 text-muted">
+                <hr class="my-4 text-muted opacity-25">
                 
-                <p class="text-center mb-0 text-muted small">
-                    Need system access? 
-                    <a href="{{ url_for('register') }}" class="text-primary fw-semibold text-decoration-none">Register Here</a>
-                </p>
+                <div class="text-center">
+                    <p class="mb-0 text-muted small">
+                        Don't have an account? 
+                        <a href="{{ url_for('register') }}" class="text-primary fw-semibold text-decoration-none">Register here</a>
+                    </p>
+                </div>
             </div>
         </div>
+        
         <div class="text-center mt-3">
-            <a href="{{ url_for('select_role') }}" class="text-muted small text-decoration-none">
-                <i class="bi bi-arrow-left-short"></i> Change Login Portal
+            <a href="{{ url_for('select_role') }}" class="text-muted small text-decoration-none d-inline-flex align-items-center gap-1">
+                <i class="bi bi-arrow-left"></i> Back to Role Selection
             </a>
         </div>
     </div>

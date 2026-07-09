@@ -1,6 +1,8 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
+{% if current_user.role.lower() != 'patient' %}
+<!-- Doctor/Nurse/Admin View Mode -->
 <div class="mb-4">
     <a href="{{ url_for('patients') }}" class="btn btn-secondary btn-sm">
         <i class="bi bi-arrow-left"></i> Back to Patients
@@ -72,4 +74,79 @@
         </div>
     </div>
 </div>
+{% else %}
+<!-- Patient Personal View & Edit Mode -->
+<div class="card border-0 shadow-sm overflow-hidden" style="max-width: 800px; margin: 0 auto;">
+    <div class="card-header bg-dark text-white d-flex align-items-center gap-3 py-4">
+        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+            <i class="bi bi-person-fill fs-2 text-white"></i>
+        </div>
+        <div>
+            <h3 class="fw-bold mb-1">{{ patient.full_name }}</h3>
+            <span class="badge bg-primary-light text-primary">Patient ID: #{{ patient.id }}</span>
+            <span class="badge bg-light text-dark border ms-1">{{ patient.gender if patient.gender else 'N/A' }}</span>
+        </div>
+    </div>
+    
+    <div class="card-body p-4">
+        <form method="POST">
+            <h5 class="fw-bold text-dark border-bottom pb-2 mb-4">
+                <i class="bi bi-file-earmark-medical text-primary me-2"></i>Clinical & Demographics Information (Read-Only)
+            </h5>
+            
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control bg-light" value="{{ patient.full_name }}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-control bg-light text-capitalize" value="{{ current_user.role }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Patient ID</label>
+                    <input type="text" class="form-control bg-light" value="#{{ patient.id }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Age</label>
+                    <input type="text" class="form-control bg-light" value="{{ patient.age if patient.age else 'N/A' }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Blood Group</label>
+                    <input type="text" class="form-control bg-light" value="{{ patient.blood_group if patient.blood_group else 'N/A' }}" readonly>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Current Diagnosis</label>
+                    <input type="text" class="form-control bg-light" value="{{ patient.disease if patient.disease else 'None' }}" readonly>
+                </div>
+            </div>
+
+            <h5 class="fw-bold text-dark border-bottom pb-2 mb-4">
+                <i class="bi bi-pencil-square text-primary me-2"></i>Contact Details (Editable)
+            </h5>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                    <input type="email" name="email" id="email" class="form-control" value="{{ current_user.email }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                    <input type="text" name="phone" id="phone" class="form-control" value="{{ patient.phone if patient.phone else '' }}" required>
+                </div>
+                <div class="col-12">
+                    <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+                    <textarea name="address" id="address" class="form-control" rows="3" required>{{ patient.address if patient.address else '' }}</textarea>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="bi bi-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

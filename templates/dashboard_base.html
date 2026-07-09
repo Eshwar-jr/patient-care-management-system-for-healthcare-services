@@ -28,93 +28,161 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebarMenu">
-            <h3 class="text-center mb-4 mt-2">
-                🏥 IPCMS
-            </h3>
+            <!-- Brand Heading -->
+            <div class="sidebar-brand text-center mb-4">
+                <h4 class="mb-0 fw-bold text-white d-flex align-items-center justify-content-center gap-2">
+                    <span class="bg-primary bg-opacity-25 p-2 rounded-3 text-primary d-inline-flex"><i class="bi bi-hospital"></i></span>
+                    <span class="tracking-wider">IPCMS Portal</span>
+                </h4>
+            </div>
             
-            <hr>
+            <!-- User Profile Section -->
+            <div class="sidebar-profile p-3 mb-4 rounded-3 d-flex align-items-center gap-3">
+                <div class="profile-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 44px; min-width: 44px;">
+                    {% if current_user.role == 'doctor' %}
+                        <i class="bi bi-person-badge fs-4 text-white"></i>
+                    {% elif current_user.role == 'nurse' %}
+                        <i class="bi bi-heart-pulse fs-4 text-white"></i>
+                    {% elif current_user.role == 'admin' %}
+                        <i class="bi bi-shield-check fs-4 text-white"></i>
+                    {% else %}
+                        <i class="bi bi-person-circle fs-4 text-white"></i>
+                    {% endif %}
+                </div>
+                <div class="overflow-hidden">
+                    <h6 class="mb-0 text-white fw-semibold text-truncate text-capitalize" style="font-size: 0.9rem;">
+                        {{ current_user.full_name }}
+                    </h6>
+                    <span class="badge bg-primary bg-opacity-20 text-primary-light text-uppercase fw-bold mt-1" style="font-size: 0.65rem; letter-spacing: 0.5px; padding: 3px 6px;">
+                        {{ current_user.role }}
+                    </span>
+                </div>
+            </div>
 
-            <!-- ADMIN -->
-            {% if current_user.role == "admin" %}
-                <a href="{{ url_for('admin_dashboard') }}" class="{% if request.path == url_for('admin_dashboard') %}active{% endif %}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-                <a href="{{ url_for('doctors') }}" class="{% if request.path == url_for('doctors') %}active{% endif %}">
-                    <i class="bi bi-person-badge-fill"></i> Doctors
-                </a>
-                <a href="{{ url_for('nurses') }}" class="{% if request.path == url_for('nurses') %}active{% endif %}">
-                    <i class="bi bi-person-heart"></i> Nurses
-                </a>
-                <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
-                    <i class="bi bi-people-fill"></i> Patients
-                </a>
-                <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
-                    <i class="bi bi-calendar-event"></i> Appointments
-                </a>
-                <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
-                    <i class="bi bi-capsule-pill"></i> Treatments
-                </a>
-                <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
-                    <i class="bi bi-credit-card"></i> Billing
-                </a>
-            {% endif %}
+            <!-- Navigation Links Container (Fills middle space) -->
+            <div class="sidebar-nav-container flex-grow-1">
+                <!-- ADMIN -->
+                {% if current_user.role == "admin" %}
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Control Center
+                    </div>
+                    <a href="{{ url_for('admin_dashboard') }}" class="{% if request.path == url_for('admin_dashboard') %}active{% endif %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Staff & Patients
+                    </div>
+                    <a href="{{ url_for('doctors') }}" class="{% if request.path == url_for('doctors') %}active{% endif %}">
+                        <i class="bi bi-person-badge-fill"></i> Doctors
+                    </a>
+                    <a href="{{ url_for('nurses') }}" class="{% if request.path == url_for('nurses') %}active{% endif %}">
+                        <i class="bi bi-person-heart"></i> Nurses
+                    </a>
+                    <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
+                        <i class="bi bi-people-fill"></i> Patients
+                    </a>
+                    
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Operations
+                    </div>
+                    <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
+                        <i class="bi bi-calendar-event"></i> Appointments
+                    </a>
+                    <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
+                        <i class="bi bi-capsule-pill"></i> Treatments
+                    </a>
+                    <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
+                        <i class="bi bi-credit-card"></i> Billing
+                    </a>
+                {% endif %}
 
-            <!-- DOCTOR -->
-            {% if current_user.role == "doctor" %}
-                <a href="{{ url_for('doctor_dashboard') }}" class="{% if request.path == url_for('doctor_dashboard') %}active{% endif %}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-                <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
-                    <i class="bi bi-people-fill"></i> Patients
-                </a>
-                <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
-                    <i class="bi bi-calendar-event"></i> Appointments
-                </a>
-                <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
-                    <i class="bi bi-capsule-pill"></i> Treatments
-                </a>
-                <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
-                    <i class="bi bi-credit-card"></i> Billing
-                </a>
-            {% endif %}
+                <!-- DOCTOR -->
+                {% if current_user.role == "doctor" %}
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Main Menu
+                    </div>
+                    <a href="{{ url_for('doctor_dashboard') }}" class="{% if request.path == url_for('doctor_dashboard') %}active{% endif %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Clinical
+                    </div>
+                    <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
+                        <i class="bi bi-people-fill"></i> Patients
+                    </a>
+                    <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
+                        <i class="bi bi-calendar-event"></i> Appointments
+                    </a>
+                    <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
+                        <i class="bi bi-capsule-pill"></i> Treatments
+                    </a>
+                    <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
+                        <i class="bi bi-credit-card"></i> Billing
+                    </a>
+                {% endif %}
 
-            <!-- NURSE -->
-            {% if current_user.role == "nurse" %}
-                <a href="{{ url_for('nurse_dashboard') }}" class="{% if request.path == url_for('nurse_dashboard') %}active{% endif %}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-                <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
-                    <i class="bi bi-people-fill"></i> Patients
-                </a>
-                <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
-                    <i class="bi bi-calendar-event"></i> Appointments
-                </a>
-                <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
-                    <i class="bi bi-capsule-pill"></i> Treatments
-                </a>
-            {% endif %}
+                <!-- NURSE -->
+                {% if current_user.role == "nurse" %}
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Main Menu
+                    </div>
+                    <a href="{{ url_for('nurse_dashboard') }}" class="{% if request.path == url_for('nurse_dashboard') %}active{% endif %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Assistance Tasks
+                    </div>
+                    <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
+                        <i class="bi bi-people-fill"></i> Patients
+                    </a>
+                    <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
+                        <i class="bi bi-calendar-event"></i> Appointments
+                    </a>
+                    <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
+                        <i class="bi bi-capsule-pill"></i> Treatments
+                    </a>
+                {% endif %}
 
-            <!-- PATIENT -->
-            {% if current_user.role == "patient" %}
-                <a href="{{ url_for('patient_dashboard') }}" class="{% if request.path == url_for('patient_dashboard') %}active{% endif %}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-                <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
-                    <i class="bi bi-calendar-event"></i> My Appointments
-                </a>
-                <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
-                    <i class="bi bi-capsule-pill"></i> My Treatments
-                </a>
-                <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
-                    <i class="bi bi-credit-card"></i> My Bills
-                </a>
-            {% endif %}
+                <!-- PATIENT -->
+                {% if current_user.role == "patient" %}
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        Portal Menu
+                    </div>
+                    <a href="{{ url_for('patient_dashboard') }}" class="{% if request.path == url_for('patient_dashboard') %}active{% endif %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('patient_profile_view') }}" class="{% if request.path == url_for('patient_profile_view') %}active{% endif %}">
+                        <i class="bi bi-person-circle"></i> My Profile
+                    </a>
+                    
+                    <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
+                        My Records
+                    </div>
+                    <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
+                        <i class="bi bi-calendar-event"></i> My Appointments
+                    </a>
+                    <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
+                        <i class="bi bi-capsule-pill"></i> My Treatments
+                    </a>
+                    <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
+                        <i class="bi bi-credit-card"></i> My Bills
+                    </a>
+                {% endif %}
+            </div>
 
-            <hr>
-
-            <a href="{{ url_for('logout') }}" class="mt-auto text-danger-hover">
-                <i class="bi bi-box-arrow-right"></i> Logout
-            </a>
+            <!-- Bottom Section (Logout & Version Info) -->
+            <div class="sidebar-footer mt-auto pt-3 border-top border-white border-opacity-10">
+                <a href="{{ url_for('logout') }}" class="sidebar-logout-btn btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 mb-3">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+                <div class="text-center text-white-50" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                    <div>Integrated Patient Care</div>
+                    <div class="opacity-50">v1.2.0 • Build Stable</div>
+                </div>
+            </div>
         </div>
 
         <!-- Main Content -->

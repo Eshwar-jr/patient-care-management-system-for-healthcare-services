@@ -10,14 +10,27 @@
             <form method="POST">
                 {{ form.hidden_tag() }}
 
-                <div class="mb-3">
-                    {{ form.patient.label(class="form-label") }}
-                    {{ form.patient(class="form-select") }}
-                </div>
+                {% if current_user.role.lower() == 'patient' %}
+                    <input type="hidden" name="patient" value="{{ patient_id }}">
+                {% else %}
+                    <div class="mb-3">
+                        {{ form.patient.label(class="form-label") }}
+                        {{ form.patient(class="form-select") }}
+                    </div>
+                {% endif %}
 
                 <div class="mb-3">
                     {{ form.doctor_name.label(class="form-label") }}
-                    {{ form.doctor_name(class="form-control", placeholder="Dr. Smith") }}
+                    {% if current_user.role.lower() == 'patient' %}
+                        <select name="doctor_name" id="doctor_name" class="form-select" required>
+                            <option value="" disabled selected>Select a Doctor</option>
+                            {% for doctor in doctors %}
+                                <option value="{{ doctor.full_name }}">Dr. {{ doctor.full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        {{ form.doctor_name(class="form-control", placeholder="Dr. Smith") }}
+                    {% endif %}
                 </div>
 
                 <div class="row g-3 mb-3">
