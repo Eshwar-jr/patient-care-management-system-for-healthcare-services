@@ -4,32 +4,70 @@ body{
 }
 
 .sidebar{
+
     width:250px;
     min-height:100vh;
+
     background:#0d6efd;
+
+    color:white;
+
     padding:20px;
+
+    position:fixed;
+
+    overflow-y:auto;
+
 }
 
 .sidebar h3{
-    color:white;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
 }
 
 .sidebar a{
-    display:block;
+
     color:white;
-    text-decoration:none;
-    padding:12px;
-    border-radius:8px;
+
+    display:block;
+
+    padding:12px 15px;
+
     margin-bottom:8px;
+
+    text-decoration:none;
+
+    border-radius:10px;
+
+    transition:0.3s;
+
+    font-weight:500;
+
 }
 
 .sidebar a:hover{
-    background:rgba(255,255,255,.2);
+
+    background:white;
+
+    color:#0d6efd;
+
+    transform:translateX(6px);
+
 }
 
 .content{
-    flex:1;
+
+    margin-left:270px;
+
     padding:30px;
+
+    background:#f5f7fb;
+
+    min-height:100vh;
+
 }
 
 .card{
@@ -53,10 +91,136 @@ body{
 }
 
 .btn{
-    border-radius:10px;
+
+    border-radius:8px;
+
+    font-weight:500;
+
+}
+
+.btn-primary{
+
+    background:#0d6efd;
+
+    border:none;
+
+}
+
+.btn-warning{
+
+    color:white;
+
 }
 
 .dashboard-card{
     border-radius:15px;
     box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+.card{
+
+    border:none;
+
+    border-radius:15px;
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.15);
+
+}
+
+.table{
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+.table thead{
+
+    font-weight:600;
+
+}
+
+.table tbody tr{
+
+    transition:.2s;
+
+}
+
+.table tbody tr:hover{
+
+    background:#edf5ff;
+
+}
+
+.card h1{
+
+    font-weight:700;
+
+    color:#0d6efd;
+
+}
+
+.card h5{
+
+    color:#555;
+
+}
+
+.form-control,
+.form-select{
+
+    border-radius:10px;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#0d6efd;
+
+    box-shadow:0 0 8px rgba(13,110,253,.25);
+
+}
+
+.login-card{
+
+    max-width:450px;
+
+    margin:auto;
+
+    margin-top:70px;
+
+}
+
+*{
+
+    transition:.2s;
+
+}
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#0d6efd;
+
+    border-radius:10px;
+
 }

@@ -1,15 +1,10 @@
 from flask import render_template, redirect, url_for, flash, request
 from app import app
 from extensions import db
-from models import Patient, Appointment, Treatment, Bill
+from models import Patient, Appointment, Treatment, Bill, User
 from forms import PatientForm, AppointmentForm, TreatmentForm, BillingForm
 from flask_login import login_required
 from datetime import date
-
-@app.route("/admin")
-@login_required
-def admin_dashboard():
-    return "<h2>Admin Dashboard</h2>"
 
 
 from datetime import date
@@ -122,11 +117,6 @@ def delete_patient(id):
     flash("Patient deleted successfully!", "success")
 
     return redirect(url_for("patients"))
-
-@app.route("/nurse")
-@login_required
-def nurse_dashboard():
-    return "<h2>Nurse Dashboard</h2>"
 
 
 @app.route("/patient/<int:id>")
@@ -477,3 +467,177 @@ def delete_bill(id):
     flash("Bill deleted successfully!", "success")
 
     return redirect(url_for("bills"))
+
+#doctor management
+
+@app.route("/doctors")
+@login_required
+def doctors():
+
+    doctors = User.query.filter_by(role="doctor").all()
+
+    return render_template(
+        "doctors.html",
+        doctors=doctors
+    )
+
+@app.route("/doctors/delete/<int:id>")
+@login_required
+def delete_doctor(id):
+
+    doctor = User.query.get_or_404(id)
+
+    db.session.delete(doctor)
+    db.session.commit()
+
+    flash("Doctor deleted successfully!", "success")
+
+    return redirect(url_for("doctors"))
+
+@app.route("/doctors/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_doctor(id):
+
+    doctor = User.query.get_or_404(id)
+
+    if request.method == "POST":
+
+        doctor.full_name = request.form["full_name"]
+        doctor.username = request.form["username"]
+        doctor.email = request.form["email"]
+        doctor.phone = request.form["phone"]
+
+        db.session.commit()
+
+        flash("Doctor updated successfully!", "success")
+
+        return redirect(url_for("doctors"))
+
+    return render_template(
+        "edit_doctor.html",
+        doctor=doctor
+    )
+
+@app.route("/nurses")
+@login_required
+def nurses():
+
+    nurses = User.query.filter_by(role="nurse").all()
+
+    return render_template(
+        "nurses.html",
+        nurses=nurses
+    )
+@app.route("/nurse/dashboard")
+@login_required
+def nurse_dashboard():
+
+    patient_count = Patient.query.count()
+    appointment_count = Appointment.query.count()
+    treatment_count = Treatment.query.count()
+
+    recent_patients = Patient.query.order_by(
+        Patient.id.desc()
+    ).limit(5).all()
+
+    recent_appointments = Appointment.query.order_by(
+        Appointment.id.desc()
+    ).limit(5).all()
+
+    return render_template(
+        "nurse_dashboard.html",
+        patient_count=patient_count,
+        appointment_count=appointment_count,
+        treatment_count=treatment_count,
+        recent_patients=recent_patients,
+        recent_appointments=recent_appointments,
+        today=date.today()
+    )
+
+@app.route("/nurses/delete/<int:id>")
+@login_required
+def delete_nurse(id):
+
+    nurse = User.query.get_or_404(id)
+
+    db.session.delete(nurse)
+
+    db.session.commit()
+
+    flash("Nurse deleted successfully!", "success")
+
+    return redirect(url_for("nurses"))
+
+@app.route("/nurses/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_nurse(id):
+
+    nurse = User.query.get_or_404(id)
+
+    if request.method == "POST":
+
+        nurse.full_name = request.form["full_name"]
+        nurse.username = request.form["username"]
+        nurse.email = request.form["email"]
+        nurse.phone = request.form["phone"]
+
+        db.session.commit()
+
+        flash("Nurse updated successfully!", "success")
+
+        return redirect(url_for("nurses"))
+
+    return render_template(
+        "edit_nurse.html",
+        nurse=nurse
+    )
+
+#admin
+
+@app.route("/admin/dashboard")
+@login_required
+def admin_dashboard():
+
+    patient_count = Patient.query.count()
+
+    doctor_count = User.query.filter_by(role="doctor").count()
+
+    nurse_count = User.query.filter_by(role="nurse").count()
+
+    appointment_count = Appointment.query.count()
+
+    treatment_count = Treatment.query.count()
+
+    bill_count = Bill.query.count()
+
+    recent_patients = Patient.query.order_by(
+        Patient.id.desc()
+    ).limit(5).all()
+
+    recent_appointments = Appointment.query.order_by(
+        Appointment.id.desc()
+    ).limit(5).all()
+
+    return render_template(
+
+        "admin_dashboard.html",
+
+        patient_count=patient_count,
+
+        doctor_count=doctor_count,
+
+        nurse_count=nurse_count,
+
+        appointment_count=appointment_count,
+
+        treatment_count=treatment_count,
+
+        bill_count=bill_count,
+
+        recent_patients=recent_patients,
+
+        recent_appointments=recent_appointments,
+
+        today=date.today()
+
+    )

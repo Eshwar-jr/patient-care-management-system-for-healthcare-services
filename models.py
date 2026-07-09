@@ -19,8 +19,8 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-    def __repr__(self):
-        return f"<User {self.username}>"
+def __repr__(self):
+   return f"<User {self.username}>"
     
 class Patient(db.Model):
 

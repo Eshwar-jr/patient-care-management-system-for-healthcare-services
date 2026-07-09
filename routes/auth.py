@@ -126,9 +126,9 @@ def login(role):
                 return redirect(
                     url_for("nurse_dashboard")
                 )
-
-            return redirect(
-                url_for("patient_dashboard")
+            elif role == "patient":
+                return redirect(
+                    url_for("patient_dashboard")
             )
 
         flash(
