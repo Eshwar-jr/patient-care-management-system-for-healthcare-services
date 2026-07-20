@@ -1,0 +1,210 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header Banner -->
+    <div class="card border-0 shadow-sm mb-4 bg-primary text-white">
+        <div class="card-body p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <span class="badge bg-white text-primary px-3 py-2 fw-bold mb-2">Comprehensive Medical Record</span>
+                    <h2 class="fw-bold mb-1 text-white"><i class="bi bi-clock-history me-2"></i>{{ patient.full_name }} — Complete Medical History</h2>
+                    <p class="mb-0 text-white-50">Unified chronological timeline combining EHR, Consultations, Prescriptions, Lab Reports, Treatments & Billing</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-light text-primary btn-sm fw-semibold" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i> Print Timeline
+                    </button>
+                    {% if current_user.role.lower() != 'patient' %}
+                    <a href="{{ url_for('patients') }}" class="btn btn-outline-light btn-sm fw-semibold">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Patients
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Overview Strip -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3 text-center">
+                    <div class="text-muted small text-uppercase fw-bold">Age & Gender</div>
+                    <div class="fw-bold fs-5 text-dark">{{ patient.age or 'N/A' }} yrs / {{ patient.gender or 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3 text-center">
+                    <div class="text-muted small text-uppercase fw-bold">Blood Group</div>
+                    <div class="fw-bold fs-5 text-danger">{{ patient.blood_group or 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3 text-center">
+                    <div class="text-muted small text-uppercase fw-bold">Primary Condition</div>
+                    <div class="fw-bold fs-5 text-primary">{{ patient.disease or 'General' }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-3 text-center">
+                    <div class="text-muted small text-uppercase fw-bold">Contact Phone</div>
+                    <div class="fw-bold fs-5 text-dark">{{ patient.phone or 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
+        <span class="fw-bold text-dark me-2 small text-uppercase">Filter Timeline:</span>
+        <button class="btn btn-sm btn-dark filter-btn active" data-filter="all">All Events ({{ timeline|length }})</button>
+        <button class="btn btn-sm btn-outline-info filter-btn" data-filter="EHR">EHR ({{ ehr_count }})</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="Consultation">Consultations ({{ consultation_count }})</button>
+        <button class="btn btn-sm btn-outline-success filter-btn" data-filter="Prescription">Prescriptions ({{ prescription_count }})</button>
+        <button class="btn btn-sm btn-outline-warning filter-btn" data-filter="Lab Report">Lab Reports ({{ lab_count }})</button>
+        <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="Treatment">Treatments ({{ treatment_count }})</button>
+        <button class="btn btn-sm btn-outline-danger filter-btn" data-filter="Bill">Bills ({{ bill_count }})</button>
+    </div>
+
+    <!-- Timeline List -->
+    <div class="row">
+        <div class="col-12">
+            {% if timeline %}
+            <div class="timeline position-relative ps-4 border-start border-3 border-primary ms-3">
+                {% for entry in timeline %}
+                <div class="timeline-item mb-4 position-relative timeline-entry" data-type="{{ entry.type }}">
+                    <!-- Timeline Node Icon -->
+                    <div class="position-absolute start-0 top-0 translate-middle rounded-circle bg-white border border-2 p-2 shadow-sm" style="margin-left: -2px;">
+                        <i class="bi {{ entry.icon }} fs-5 text-dark"></i>
+                    </div>
+
+                    <div class="card border-0 shadow-sm ms-3">
+                        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge {{ entry.badge }} px-3 py-2 fw-semibold">{{ entry.type }}</span>
+                                <h5 class="mb-0 fw-bold text-dark fs-6">{{ entry.title }}</h5>
+                            </div>
+                            <span class="text-muted small fw-semibold">
+                                <i class="bi bi-calendar3 me-1"></i>{{ entry.date.strftime('%Y-%m-%d') if entry.date else 'N/A' }}
+                            </span>
+                        </div>
+                        <div class="card-body pt-0 pb-3">
+
+                            {% if entry.type == 'EHR' %}
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-muted small"><strong>Medical History:</strong> {{ entry.item.medical_history or 'None recorded' }}</p>
+                                        <p class="mb-1 text-muted small"><strong>Allergies:</strong> {{ entry.item.allergies or 'None' }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-muted small"><strong>Vitals:</strong> BP: {{ entry.item.blood_pressure or 'N/A' }} | HR: {{ entry.item.heart_rate or 'N/A' }} | Temp: {{ entry.item.temperature or 'N/A' }}</p>
+                                        <p class="mb-1 text-muted small"><strong>Current Medications:</strong> {{ entry.item.current_medications or 'N/A' }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{{ url_for('view_ehr', id=entry.item.id) }}" class="btn btn-sm btn-outline-info py-0 px-2">View EHR</a>
+                                </div>
+
+                            {% elif entry.type == 'Consultation' %}
+                                <p class="mb-1 text-dark"><strong>Symptoms:</strong> {{ entry.item.symptoms }}</p>
+                                <p class="mb-1 text-muted small"><strong>Diagnosis:</strong> {{ entry.item.diagnosis }}</p>
+                                {% if entry.item.notes %}
+                                <p class="mb-1 text-muted small"><strong>Doctor Notes:</strong> {{ entry.item.notes }}</p>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <a href="{{ url_for('view_consultation', id=entry.item.id) }}" class="btn btn-sm btn-outline-primary py-0 px-2">View Consultation</a>
+                                </div>
+
+                            {% elif entry.type == 'Prescription' %}
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-dark"><strong>Medication:</strong> <span class="fw-bold text-success">{{ entry.item.medication_name }}</span></p>
+                                        <p class="mb-1 text-muted small"><strong>Dosage & Frequency:</strong> {{ entry.item.dosage }} ({{ entry.item.frequency }})</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-muted small"><strong>Duration:</strong> {{ entry.item.duration }}</p>
+                                        <p class="mb-1 text-muted small"><strong>Advice:</strong> {{ entry.item.instructions or 'Follow prescription guidelines' }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{{ url_for('view_prescription', id=entry.item.id) }}" class="btn btn-sm btn-outline-success py-0 px-2">View Prescription</a>
+                                </div>
+
+                            {% elif entry.type == 'Lab Report' %}
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-dark"><strong>Test Requested:</strong> {{ entry.item.test_name }}</p>
+                                        <p class="mb-1"><strong>Status:</strong> 
+                                            {% if entry.item.status == 'Completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                            {% else %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-muted small"><strong>Findings:</strong> {{ entry.item.results or 'Results Pending' }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{{ url_for('view_lab_report', id=entry.item.id) }}" class="btn btn-sm btn-outline-warning py-0 px-2">View Lab Report</a>
+                                </div>
+
+                            {% elif entry.type == 'Treatment' %}
+                                <p class="mb-1 text-dark"><strong>Diagnosis:</strong> {{ entry.item.diagnosis or 'N/A' }}</p>
+                                <p class="mb-1 text-muted small"><strong>Treatment Details:</strong> {{ entry.item.treatment_details }}</p>
+
+                            {% elif entry.type == 'Bill' %}
+                                <p class="mb-1 text-dark"><strong>Amount Billed:</strong> <span class="fw-bold text-danger">${{ entry.item.amount }}</span></p>
+                                <p class="mb-1 text-muted small"><strong>Payment Status:</strong> 
+                                    <span class="badge {% if entry.item.payment_status == 'Paid' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ entry.item.payment_status }}
+                                    </span>
+                                </p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card border-0 shadow-sm p-5 text-center text-muted">
+                <i class="bi bi-clock-history fs-1 mb-3"></i>
+                <h4>No Medical Records Found</h4>
+                <p>No health events, consultations, or test records have been logged for this patient yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active', 'btn-dark'));
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.add('btn-outline-secondary'));
+        
+        this.classList.add('active', 'btn-dark');
+
+        const filter = this.getAttribute('data-filter');
+        document.querySelectorAll('.timeline-entry').forEach(entry => {
+            if (filter === 'all' || entry.getAttribute('data-type') === filter) {
+                entry.style.display = '';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

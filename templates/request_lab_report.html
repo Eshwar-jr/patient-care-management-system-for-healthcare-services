@@ -1,0 +1,43 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 650px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-radioactive me-2"></i>Request Diagnostic Lab Test</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.patient.label(class="form-label fw-semibold") }}
+                    {{ form.patient(class="form-select") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.test_name.label(class="form-label fw-semibold") }}
+                    {{ form.test_name(class="form-control", placeholder="e.g. Complete Blood Count (CBC), Lipid Profile, X-Ray Chest...") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.request_date.label(class="form-label fw-semibold") }}
+                    {{ form.request_date(class="form-control") }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.lab_notes.label(class="form-label fw-semibold") }}
+                    {{ form.lab_notes(class="form-control", rows=3, placeholder="Special clinical instructions or fasting requirements for lab technician...") }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-primary px-4") }}
+                    <a href="{{ url_for('lab_reports') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

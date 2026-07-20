@@ -1,0 +1,114 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="alert alert-warning border-0 d-flex align-items-center gap-2 mb-4 py-3">
+    <i class="bi bi-radioactive fs-5"></i>
+    <div>
+        <strong>Laboratory Module:</strong> Doctors request diagnostic tests; Nurses and Lab Technicians record test results and upload findings.
+    </div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">🧪 Lab Reports & Test Diagnostics</h2>
+        <p class="text-muted mb-0 small">Manage lab requisitions, pending tests, and result logs</p>
+    </div>
+    {% if current_user.role.lower() in ['doctor', 'admin'] %}
+    <a href="{{ url_for('request_lab_report') }}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle"></i> Request Lab Test
+    </a>
+    {% endif %}
+</div>
+
+<!-- Search Box -->
+<div class="row mb-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="labSearch"
+                class="form-control border-start-0 ps-0 bg-white"
+                placeholder="Search lab reports...">
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="labTable">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Test Name</th>
+                        <th>Requested By</th>
+                        <th>Status</th>
+                        <th>Request Date</th>
+                        <th width="180" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for report in lab_reports %}
+                <tr>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ report.patient.full_name }}</span>
+                        <div class="text-muted small">ID: #{{ report.patient_id }}</div>
+                    </td>
+                    <td><span class="fw-bold text-dark">{{ report.test_name }}</span></td>
+                    <td>
+                        {% if report.requested_by %}
+                            <span class="badge bg-light text-dark"><i class="bi bi-person-badge me-1"></i>Dr. {{ report.requested_by.full_name }}</span>
+                        {% else %}
+                            <span class="text-muted small">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.status == 'Completed' %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Completed</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                        {% endif %}
+                    </td>
+                    <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ report.request_date.strftime('%Y-%m-%d') if report.request_date else 'N/A' }}</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('view_lab_report', id=report.id) }}" class="btn btn-outline-info btn-sm py-1 px-2">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            {% if current_user.role.lower() in ['nurse', 'doctor', 'admin'] %}
+                            <a href="{{ url_for('update_lab_report', id=report.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                                <i class="bi bi-pencil-square"></i> Results
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-radioactive fs-2 mb-2 d-block"></i>
+                        No Laboratory Reports Found
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById("labSearch").addEventListener("keyup", function() {
+    let value = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#labTable tbody tr");
+    rows.forEach(function(row){
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+    });
+});
+</script>
+{% endblock %}

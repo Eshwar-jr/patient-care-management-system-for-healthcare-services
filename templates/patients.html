@@ -74,6 +74,9 @@
                     </td>
                     <td class="text-center">
                         <div class="d-inline-flex gap-1">
+                            <a href="{{ url_for('patient_history', id=patient.id) }}" class="btn btn-outline-info btn-sm py-1 px-2">
+                                <i class="bi bi-clock-history"></i> History
+                            </a>
                             <a href="{{ url_for('patient_profile', id=patient.id) }}" class="btn btn-outline-primary btn-sm py-1 px-2">
                                 <i class="bi bi-eye"></i> View
                             </a>

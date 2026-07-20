@@ -1,0 +1,76 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 800px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ url_for('lab_reports') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Lab Reports
+        </a>
+        {% if current_user.role.lower() in ['nurse', 'doctor', 'admin'] %}
+        <a href="{{ url_for('update_lab_report', id=lab_report.id) }}" class="btn btn-warning btn-sm fw-semibold">
+            <i class="bi bi-pencil-square me-1"></i> Update Lab Results
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-dark text-white p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1 fw-bold text-white"><i class="bi bi-radioactive me-2"></i>Lab Diagnostic Report</h3>
+                    <p class="mb-0 text-white-50">Test Requisition: {{ lab_report.test_name }}</p>
+                </div>
+                {% if lab_report.status == 'Completed' %}
+                    <span class="badge bg-success fs-6 px-3 py-2">Completed</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">Pending</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <!-- Patient & Requisition Info -->
+            <div class="row g-3 mb-4 p-3 bg-light rounded-3">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted fw-bold small">Patient Information</h6>
+                    <h5 class="mb-1 text-dark fw-bold">{{ lab_report.patient.full_name }}</h5>
+                    <div class="text-secondary small">Patient ID: #{{ lab_report.patient_id }}</div>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted fw-bold small">Request & Lab Staff</h6>
+                    <div class="small">
+                        <div><strong>Requested By:</strong> Dr. {{ lab_report.requested_by.full_name if lab_report.requested_by else 'N/A' }}</div>
+                        <div><strong>Requested On:</strong> {{ lab_report.request_date }}</div>
+                        {% if lab_report.performed_by %}
+                            <div><strong>Performed By:</strong> {{ lab_report.performed_by.full_name }}</div>
+                            <div><strong>Result Date:</strong> {{ lab_report.result_date or 'N/A' }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagnostic Findings / Results -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-2 text-dark"><i class="bi bi-clipboard2-data text-primary me-2"></i>Lab Test Results & Findings</h5>
+                <div class="p-4 bg-white border border-primary-subtle rounded-3">
+                    {% if lab_report.results %}
+                        <div style="white-space: pre-line;" class="fs-6 text-dark fw-semibold">{{ lab_report.results }}</div>
+                    {% else %}
+                        <div class="text-muted italic py-3 text-center">
+                            <i class="bi bi-hourglass-split fs-4 d-block mb-1"></i>
+                            Test results are pending entry by the laboratory staff.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="mb-2">
+                <h5 class="fw-bold mb-2 text-dark"><i class="bi bi-journal-text text-secondary me-2"></i>Lab Notes / Remarks</h5>
+                <div class="p-3 bg-white border rounded">
+                    {{ lab_report.lab_notes or 'No additional lab notes.' }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

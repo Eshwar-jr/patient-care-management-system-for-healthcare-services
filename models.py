@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from flask_login import UserMixin
 from extensions import db
 from extensions import login_manager
@@ -161,3 +161,117 @@ class Bill(db.Model):
         db.Date,
         nullable=False
     )
+
+class EHR(db.Model):
+    __tablename__ = "ehrs"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+    doctor_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=True
+    )
+    medical_history = db.Column(db.Text)
+    allergies = db.Column(db.Text)
+    current_medications = db.Column(db.Text)
+    blood_pressure = db.Column(db.String(30))
+    heart_rate = db.Column(db.String(30))
+    temperature = db.Column(db.String(30))
+    weight = db.Column(db.String(30))
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
+
+    patient = db.relationship("Patient", backref="ehrs")
+    doctor = db.relationship("User", foreign_keys=[doctor_id])
+
+class Consultation(db.Model):
+    __tablename__ = "consultations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+    doctor_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
+    consultation_date = db.Column(db.Date, nullable=False, default=date.today)
+    symptoms = db.Column(db.Text, nullable=False)
+    diagnosis = db.Column(db.String(255), nullable=False)
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    patient = db.relationship("Patient", backref="consultations")
+    doctor = db.relationship("User", foreign_keys=[doctor_id])
+
+class Prescription(db.Model):
+    __tablename__ = "prescriptions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+    doctor_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
+    medication_name = db.Column(db.String(200), nullable=False)
+    dosage = db.Column(db.String(100), nullable=False)
+    frequency = db.Column(db.String(100), nullable=False)
+    duration = db.Column(db.String(100), nullable=False)
+    instructions = db.Column(db.Text)
+    date_prescribed = db.Column(db.Date, nullable=False, default=date.today)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    patient = db.relationship("Patient", backref="prescriptions")
+    doctor = db.relationship("User", foreign_keys=[doctor_id])
+
+class LabReport(db.Model):
+    __tablename__ = "lab_reports"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(
+        db.Integer,
+        db.ForeignKey("patients.id"),
+        nullable=False
+    )
+    requested_by_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
+    performed_by_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=True
+    )
+    test_name = db.Column(db.String(200), nullable=False)
+    status = db.Column(db.String(30), default="Pending")
+    results = db.Column(db.Text)
+    lab_notes = db.Column(db.Text)
+    request_date = db.Column(db.Date, nullable=False, default=date.today)
+    result_date = db.Column(db.Date)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    patient = db.relationship("Patient", backref="lab_reports")
+    requested_by = db.relationship("User", foreign_keys=[requested_by_id])
+    performed_by = db.relationship("User", foreign_keys=[performed_by_id])
+
+
+

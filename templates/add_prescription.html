@@ -1,0 +1,60 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 650px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-success text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-prescription2 me-2"></i>Prescribe Medicine</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.patient.label(class="form-label fw-semibold") }}
+                    {{ form.patient(class="form-select") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.medication_name.label(class="form-label fw-semibold") }}
+                    {{ form.medication_name(class="form-control", placeholder="e.g. Amoxicillin / Paracetamol / Metformin") }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.dosage.label(class="form-label fw-semibold") }}
+                        {{ form.dosage(class="form-control", placeholder="e.g. 500mg, 10ml") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.frequency.label(class="form-label fw-semibold") }}
+                        {{ form.frequency(class="form-control", placeholder="e.g. Twice daily after meals") }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.duration.label(class="form-label fw-semibold") }}
+                        {{ form.duration(class="form-control", placeholder="e.g. 7 days, 1 month") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.date_prescribed.label(class="form-label fw-semibold") }}
+                        {{ form.date_prescribed(class="form-control") }}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    {{ form.instructions.label(class="form-label fw-semibold") }}
+                    {{ form.instructions(class="form-control", rows=3, placeholder="Special instructions (e.g. Take with food, avoid alcohol, drink plenty of water)...") }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-success px-4") }}
+                    <a href="{{ url_for('prescriptions') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

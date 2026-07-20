@@ -1,0 +1,48 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 650px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-stethoscope me-2"></i>Record New Consultation</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.patient.label(class="form-label fw-semibold") }}
+                    {{ form.patient(class="form-select") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.consultation_date.label(class="form-label fw-semibold") }}
+                    {{ form.consultation_date(class="form-control") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.symptoms.label(class="form-label fw-semibold") }}
+                    {{ form.symptoms(class="form-control", rows=3, placeholder="Reported symptoms (e.g. persistent cough, high fever, fatigue)...") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.diagnosis.label(class="form-label fw-semibold") }}
+                    {{ form.diagnosis(class="form-control", placeholder="Primary diagnosis (e.g. Upper Respiratory Tract Infection)") }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.notes.label(class="form-label fw-semibold") }}
+                    {{ form.notes(class="form-control", rows=3, placeholder="Consultation notes, recommendations, next steps...") }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-success px-4") }}
+                    <a href="{{ url_for('consultations') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

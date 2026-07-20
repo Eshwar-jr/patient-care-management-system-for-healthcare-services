@@ -1,0 +1,79 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 750px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ url_for('prescriptions') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Prescriptions
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-success text-white p-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1 fw-bold text-white"><i class="bi bi-prescription2 me-2"></i>Rx Prescription #{{ prescription.id }}</h3>
+                    <p class="mb-0 text-white-50"><i class="bi bi-calendar3 me-1"></i>Date Prescribed: {{ prescription.date_prescribed }}</p>
+                </div>
+                <span class="badge bg-white text-success fs-6 px-3 py-2">Rx Active</span>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <!-- Patient & Doctor Info -->
+            <div class="row g-3 mb-4 p-3 bg-light rounded-3">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted fw-bold small">Patient</h6>
+                    <h5 class="mb-1 text-dark fw-bold">{{ prescription.patient.full_name }}</h5>
+                    <div class="text-secondary small">Patient ID: #{{ prescription.patient_id }}</div>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted fw-bold small">Prescribing Doctor</h6>
+                    <h5 class="mb-1 text-dark fw-bold">
+                        {% if prescription.doctor %}
+                            Dr. {{ prescription.doctor.full_name }}
+                        {% else %}
+                            <span class="text-muted">Unassigned</span>
+                        {% endif %}
+                    </h5>
+                    <div class="text-secondary small">Doctor ID: #{{ prescription.doctor_id }}</div>
+                </div>
+            </div>
+
+            <!-- Medication Overview -->
+            <div class="p-3 bg-success-light border border-success-subtle rounded-3 mb-4">
+                <h6 class="text-uppercase text-success fw-bold small mb-1">Prescribed Medication</h6>
+                <h4 class="fw-bold text-dark mb-0">{{ prescription.medication_name }}</h4>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="text-muted small text-uppercase fw-semibold">Dosage</div>
+                        <div class="fw-bold text-dark fs-5 mt-1">{{ prescription.dosage }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="text-muted small text-uppercase fw-semibold">Frequency</div>
+                        <div class="fw-bold text-dark fs-5 mt-1">{{ prescription.frequency }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-white">
+                        <div class="text-muted small text-uppercase fw-semibold">Duration</div>
+                        <div class="fw-bold text-dark fs-5 mt-1">{{ prescription.duration }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="mb-2">
+                <h5 class="fw-bold mb-2 text-dark"><i class="bi bi-info-circle text-info me-2"></i>Administration Instructions</h5>
+                <div class="p-3 bg-white border rounded">
+                    {{ prescription.instructions or 'Follow standard dosage instructions.' }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -86,6 +86,18 @@
                     <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
                         Operations
                     </div>
+                    <a href="{{ url_for('ehrs') }}" class="{% if request.path == url_for('ehrs') %}active{% endif %}">
+                        <i class="bi bi-file-earmark-medical"></i> EHR Records
+                    </a>
+                    <a href="{{ url_for('consultations') }}" class="{% if request.path == url_for('consultations') %}active{% endif %}">
+                        <i class="bi bi-stethoscope"></i> Consultations
+                    </a>
+                    <a href="{{ url_for('prescriptions') }}" class="{% if request.path == url_for('prescriptions') %}active{% endif %}">
+                        <i class="bi bi-prescription2"></i> Prescriptions
+                    </a>
+                    <a href="{{ url_for('lab_reports') }}" class="{% if request.path == url_for('lab_reports') %}active{% endif %}">
+                        <i class="bi bi-radioactive"></i> Lab Reports
+                    </a>
                     <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
                         <i class="bi bi-calendar-event"></i> Appointments
                     </a>
@@ -94,6 +106,9 @@
                     </a>
                     <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
                         <i class="bi bi-credit-card"></i> Billing
+                    </a>
+                    <a href="{{ url_for('search_reports') }}" class="{% if request.path == url_for('search_reports') %}active{% endif %}">
+                        <i class="bi bi-search"></i> Search & Reports
                     </a>
                 {% endif %}
 
@@ -112,6 +127,18 @@
                     <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
                         <i class="bi bi-people-fill"></i> Patients
                     </a>
+                    <a href="{{ url_for('ehrs') }}" class="{% if request.path == url_for('ehrs') %}active{% endif %}">
+                        <i class="bi bi-file-earmark-medical"></i> EHR Records
+                    </a>
+                    <a href="{{ url_for('consultations') }}" class="{% if request.path == url_for('consultations') %}active{% endif %}">
+                        <i class="bi bi-stethoscope"></i> Consultations
+                    </a>
+                    <a href="{{ url_for('prescriptions') }}" class="{% if request.path == url_for('prescriptions') %}active{% endif %}">
+                        <i class="bi bi-prescription2"></i> Prescriptions
+                    </a>
+                    <a href="{{ url_for('lab_reports') }}" class="{% if request.path == url_for('lab_reports') %}active{% endif %}">
+                        <i class="bi bi-radioactive"></i> Lab Reports
+                    </a>
                     <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
                         <i class="bi bi-calendar-event"></i> Appointments
                     </a>
@@ -120,6 +147,9 @@
                     </a>
                     <a href="{{ url_for('bills') }}" class="{% if request.path == url_for('bills') %}active{% endif %}">
                         <i class="bi bi-credit-card"></i> Billing
+                    </a>
+                    <a href="{{ url_for('search_reports') }}" class="{% if request.path == url_for('search_reports') %}active{% endif %}">
+                        <i class="bi bi-search"></i> Search & Reports
                     </a>
                 {% endif %}
 
@@ -138,11 +168,26 @@
                     <a href="{{ url_for('patients') }}" class="{% if request.path == url_for('patients') %}active{% endif %}">
                         <i class="bi bi-people-fill"></i> Patients
                     </a>
+                    <a href="{{ url_for('ehrs') }}" class="{% if request.path == url_for('ehrs') %}active{% endif %}">
+                        <i class="bi bi-file-earmark-medical"></i> EHR Records
+                    </a>
+                    <a href="{{ url_for('consultations') }}" class="{% if request.path == url_for('consultations') %}active{% endif %}">
+                        <i class="bi bi-stethoscope"></i> Consultations
+                    </a>
+                    <a href="{{ url_for('prescriptions') }}" class="{% if request.path == url_for('prescriptions') %}active{% endif %}">
+                        <i class="bi bi-prescription2"></i> Prescriptions
+                    </a>
+                    <a href="{{ url_for('lab_reports') }}" class="{% if request.path == url_for('lab_reports') %}active{% endif %}">
+                        <i class="bi bi-radioactive"></i> Lab Reports
+                    </a>
                     <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
                         <i class="bi bi-calendar-event"></i> Appointments
                     </a>
                     <a href="{{ url_for('treatments') }}" class="{% if request.path == url_for('treatments') %}active{% endif %}">
                         <i class="bi bi-capsule-pill"></i> Treatments
+                    </a>
+                    <a href="{{ url_for('search_reports') }}" class="{% if request.path == url_for('search_reports') %}active{% endif %}">
+                        <i class="bi bi-search"></i> Search & Reports
                     </a>
                 {% endif %}
 
@@ -154,6 +199,12 @@
                     <a href="{{ url_for('patient_dashboard') }}" class="{% if request.path == url_for('patient_dashboard') %}active{% endif %}">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
+                    <a href="{{ url_for('my_history') }}" class="{% if 'history' in request.path %}active{% endif %}">
+                        <i class="bi bi-clock-history"></i> Medical Timeline
+                    </a>
+                    <a href="{{ url_for('search_reports') }}" class="{% if request.path == url_for('search_reports') %}active{% endif %}">
+                        <i class="bi bi-search"></i> Search & Reports
+                    </a>
                     <a href="{{ url_for('patient_profile_view') }}" class="{% if request.path == url_for('patient_profile_view') %}active{% endif %}">
                         <i class="bi bi-person-circle"></i> My Profile
                     </a>
@@ -161,6 +212,18 @@
                     <div class="sidebar-heading text-uppercase text-white-50 fw-bold mb-2 mt-4 px-2" style="font-size: 0.68rem; letter-spacing: 1px;">
                         My Records
                     </div>
+                    <a href="{{ url_for('ehrs') }}" class="{% if request.path == url_for('ehrs') %}active{% endif %}">
+                        <i class="bi bi-file-earmark-medical"></i> My Health Record (EHR)
+                    </a>
+                    <a href="{{ url_for('consultations') }}" class="{% if request.path == url_for('consultations') %}active{% endif %}">
+                        <i class="bi bi-stethoscope"></i> My Consultations
+                    </a>
+                    <a href="{{ url_for('prescriptions') }}" class="{% if request.path == url_for('prescriptions') %}active{% endif %}">
+                        <i class="bi bi-prescription2"></i> My Prescriptions
+                    </a>
+                    <a href="{{ url_for('lab_reports') }}" class="{% if request.path == url_for('lab_reports') %}active{% endif %}">
+                        <i class="bi bi-radioactive"></i> My Lab Reports
+                    </a>
                     <a href="{{ url_for('appointments') }}" class="{% if request.path == url_for('appointments') %}active{% endif %}">
                         <i class="bi bi-calendar-event"></i> My Appointments
                     </a>

@@ -1,0 +1,71 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 750px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Electronic Health Record</h4>
+            <span class="badge bg-primary">EHR #{{ ehr.id }}</span>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.patient.label(class="form-label fw-semibold") }}
+                    {{ form.patient(class="form-select") }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.blood_pressure.label(class="form-label fw-semibold") }}
+                        {{ form.blood_pressure(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.heart_rate.label(class="form-label fw-semibold") }}
+                        {{ form.heart_rate(class="form-control") }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.temperature.label(class="form-label fw-semibold") }}
+                        {{ form.temperature(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.weight.label(class="form-label fw-semibold") }}
+                        {{ form.weight(class="form-control") }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.medical_history.label(class="form-label fw-semibold") }}
+                    {{ form.medical_history(class="form-control", rows=3) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.allergies.label(class="form-label fw-semibold") }}
+                    {{ form.allergies(class="form-control", rows=2) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.current_medications.label(class="form-label fw-semibold") }}
+                    {{ form.current_medications(class="form-control", rows=2) }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.notes.label(class="form-label fw-semibold") }}
+                    {{ form.notes(class="form-control", rows=3) }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-warning text-dark px-4 fw-semibold") }}
+                    <a href="{{ url_for('ehrs') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

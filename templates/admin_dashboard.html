@@ -14,8 +14,8 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-sm-6 col-md-4 col-xl-2">
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-3 col-xl-3">
         <div class="card metric-card border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-4 col-xl-2">
+    <div class="col-sm-6 col-md-3 col-xl-3">
         <div class="card metric-card doctor border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-4 col-xl-2">
+    <div class="col-sm-6 col-md-3 col-xl-3">
         <div class="card metric-card nurse border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
@@ -51,7 +51,55 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-4 col-xl-2">
+    <div class="col-sm-6 col-md-3 col-xl-3">
+        <div class="card metric-card border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon bg-info-light text-info">
+                    <i class="bi bi-file-earmark-medical"></i>
+                </div>
+                <h5>EHR Records</h5>
+                <h2>{{ ehr_count or 0 }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3 col-xl-3">
+        <div class="card metric-card border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon bg-primary-light text-primary">
+                    <i class="bi bi-stethoscope"></i>
+                </div>
+                <h5>Consultations</h5>
+                <h2>{{ consultation_count or 0 }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3 col-xl-3">
+        <div class="card metric-card border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon bg-success-light text-success">
+                    <i class="bi bi-prescription2"></i>
+                </div>
+                <h5>Prescriptions</h5>
+                <h2>{{ prescription_count or 0 }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3 col-xl-3">
+        <div class="card metric-card border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon bg-warning-light text-warning">
+                    <i class="bi bi-radioactive"></i>
+                </div>
+                <h5>Lab Reports</h5>
+                <h2>{{ lab_count or 0 }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-3 col-xl-3">
         <div class="card metric-card appointment border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
@@ -63,7 +111,7 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-4 col-xl-2">
+    <div class="col-sm-6 col-md-3 col-xl-3">
         <div class="card metric-card treatment border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
@@ -71,18 +119,6 @@
                 </div>
                 <h5>Treatments</h5>
                 <h2>{{ treatment_count }}</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-4 col-xl-2">
-        <div class="card metric-card bill border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
-                <div class="metric-icon">
-                    <i class="bi bi-credit-card"></i>
-                </div>
-                <h5>Bills Issued</h5>
-                <h2>{{ bill_count }}</h2>
             </div>
         </div>
     </div>

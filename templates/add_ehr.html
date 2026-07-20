@@ -1,0 +1,70 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 750px;">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-file-earmark-medical me-2"></i>Create Electronic Health Record (EHR)</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.patient.label(class="form-label fw-semibold") }}
+                    {{ form.patient(class="form-select") }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.blood_pressure.label(class="form-label fw-semibold") }}
+                        {{ form.blood_pressure(class="form-control", placeholder="e.g. 120/80 mmHg") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.heart_rate.label(class="form-label fw-semibold") }}
+                        {{ form.heart_rate(class="form-control", placeholder="e.g. 72 bpm") }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.temperature.label(class="form-label fw-semibold") }}
+                        {{ form.temperature(class="form-control", placeholder="e.g. 98.6 °F") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.weight.label(class="form-label fw-semibold") }}
+                        {{ form.weight(class="form-control", placeholder="e.g. 70 kg") }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.medical_history.label(class="form-label fw-semibold") }}
+                    {{ form.medical_history(class="form-control", rows=3, placeholder="Past medical conditions, surgeries, chronic illnesses...") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.allergies.label(class="form-label fw-semibold") }}
+                    {{ form.allergies(class="form-control", rows=2, placeholder="Known allergies (e.g. Penicillin, Peanuts, Latex)") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.current_medications.label(class="form-label fw-semibold") }}
+                    {{ form.current_medications(class="form-control", rows=2, placeholder="Active prescriptions & daily medications...") }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.notes.label(class="form-label fw-semibold") }}
+                    {{ form.notes(class="form-control", rows=3, placeholder="Clinical notes, observations, or special instructions...") }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-success px-4") }}
+                    <a href="{{ url_for('ehrs') }}" class="btn btn-secondary px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
