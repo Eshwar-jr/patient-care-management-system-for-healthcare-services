@@ -39,8 +39,8 @@ body {
 
 /* Sidebar Styling */
 .sidebar {
-    width: 260px;
-    min-height: 100vh;
+    width: 280px;
+    height: 100vh;
     background: var(--dark);
     color: white;
     padding: 24px 16px;
@@ -105,7 +105,7 @@ body {
 
 /* Content Area */
 .content {
-    margin-left: 260px;
+    margin-left: 280px;
     padding: 36px 40px;
     background: var(--light);
     min-height: 100vh;
@@ -585,4 +585,124 @@ body {
 
 .text-primary-light {
     color: #7dd3fc !important;
+}
+
+/* Premium UI/UX Custom Utilities */
+.shadow-premium {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+}
+
+.card-lift {
+    transition: var(--transition);
+}
+
+.card-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08) !important;
+}
+
+.empty-state {
+    padding: 60px 24px;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    background: white;
+    border: 1px dashed var(--gray-300);
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 2.2rem;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 2.2rem;
+    border-left: 3px solid var(--primary-light);
+    margin-left: 1rem;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.timeline-entry {
+    transition: var(--transition);
+}
+
+.timeline-entry:hover {
+    transform: translateX(6px);
+}
+
+.timeline-icon-wrapper {
+    position: absolute;
+    left: calc(-2.2rem - 18px); /* Shifts the icon center to align perfectly with the border-left */
+    top: 12px;
+    width: 33px;
+    height: 33px;
+    background: white;
+    border: 3px solid var(--primary);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.timeline-item:hover .timeline-icon-wrapper {
+    background: var(--primary);
+    color: white !important;
+    transform: scale(1.1);
+}
+
+
+.btn-action-group {
+    display: inline-flex;
+    gap: 6px;
+}
+
+.form-card {
+    border-radius: var(--radius-lg);
+    background: white;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.form-card-header {
+    border-bottom: 1px solid var(--gray-200);
+    padding: 24px 30px;
+    background: var(--light);
+}
+
+/* Custom form hover styling */
+.form-control:focus, .form-select:focus {
+    background-color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1) !important;
+}
+
+/* Print optimizations */
+@media print {
+    .sidebar, .mobile-header, .btn, .alert, .filter-btn, .sidebar-overlay {
+        display: none !important;
+    }
+    .content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+    }
 }

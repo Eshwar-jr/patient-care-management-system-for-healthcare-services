@@ -6,11 +6,16 @@
         <a href="{{ url_for('ehrs') }}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left me-1"></i> Back to EHR Records
         </a>
-        {% if current_user.role.lower() != 'patient' %}
-        <a href="{{ url_for('edit_ehr', id=ehr.id) }}" class="btn btn-warning btn-sm fw-semibold">
-            <i class="bi bi-pencil-square me-1"></i> Edit EHR Record
-        </a>
-        {% endif %}
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-outline-primary btn-sm fw-semibold">
+                <i class="bi bi-printer me-1"></i> Print EHR
+            </button>
+            {% if current_user.role.lower() != 'patient' %}
+            <a href="{{ url_for('edit_ehr', id=ehr.id) }}" class="btn btn-warning btn-sm fw-semibold">
+                <i class="bi bi-pencil-square me-1"></i> Edit EHR Record
+            </a>
+            {% endif %}
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">

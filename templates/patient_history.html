@@ -71,18 +71,19 @@
         <button class="btn btn-sm btn-outline-warning filter-btn" data-filter="Lab Report">Lab Reports ({{ lab_count }})</button>
         <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="Treatment">Treatments ({{ treatment_count }})</button>
         <button class="btn btn-sm btn-outline-danger filter-btn" data-filter="Bill">Bills ({{ bill_count }})</button>
+        <button class="btn btn-sm btn-outline-success filter-btn" data-filter="Dispensed">Dispensed ({{ dispensing_count }})</button>
     </div>
 
     <!-- Timeline List -->
     <div class="row">
         <div class="col-12">
             {% if timeline %}
-            <div class="timeline position-relative ps-4 border-start border-3 border-primary ms-3">
+            <div class="timeline">
                 {% for entry in timeline %}
-                <div class="timeline-item mb-4 position-relative timeline-entry" data-type="{{ entry.type }}">
+                <div class="timeline-item timeline-entry" data-type="{{ entry.type }}">
                     <!-- Timeline Node Icon -->
-                    <div class="position-absolute start-0 top-0 translate-middle rounded-circle bg-white border border-2 p-2 shadow-sm" style="margin-left: -2px;">
-                        <i class="bi {{ entry.icon }} fs-5 text-dark"></i>
+                    <div class="timeline-icon-wrapper">
+                        <i class="bi {{ entry.icon }} fs-6"></i>
                     </div>
 
                     <div class="card border-0 shadow-sm ms-3">
@@ -168,6 +169,17 @@
                                         {{ entry.item.payment_status }}
                                     </span>
                                 </p>
+                            {% elif entry.type == 'Dispensed' %}
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-dark"><strong>Medicine:</strong> <span class="fw-bold text-success">{{ entry.item.medicine.name }}</span></p>
+                                        <p class="mb-1 text-muted small"><strong>Quantity:</strong> {{ entry.item.quantity }} unit(s)</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1 text-muted small"><strong>Dispensed By:</strong> {{ entry.item.dispensed_by.full_name }}</p>
+                                        <p class="mb-1 text-muted small"><strong>Total Charge:</strong> <span class="fw-bold text-success">₹{{ entry.item.total_amount }}</span></p>
+                                    </div>
+                                </div>
                             {% endif %}
 
                         </div>

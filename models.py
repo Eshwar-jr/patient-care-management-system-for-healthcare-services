@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(15), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False)
+    role = db.Column(db.String(20), nullable=False, index=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 @login_manager.user_loader
@@ -41,6 +41,11 @@ class Patient(db.Model):
     blood_group = db.Column(db.String(10))
 
     disease = db.Column(db.String(100))
+
+    aadhaar = db.Column(db.String(12), unique=True, nullable=True)
+
+    email = db.Column(db.String(120), nullable=True)
+
 
 
 class Appointment(db.Model):
@@ -130,6 +135,9 @@ class Treatment(db.Model):
         nullable=False
     )
 
+    bill_id = db.Column(db.Integer, db.ForeignKey("bills.id", ondelete="SET NULL"), nullable=True)
+    bill = db.relationship("Bill", backref="treatments")
+
 class Bill(db.Model):
 
     __tablename__ = "bills"
@@ -160,6 +168,16 @@ class Bill(db.Model):
     bill_date = db.Column(
         db.Date,
         nullable=False
+    )
+
+    payment_method = db.Column(
+        db.String(50),
+        nullable=True
+    )
+
+    payment_date = db.Column(
+        db.Date,
+        nullable=True
     )
 
 class EHR(db.Model):
@@ -216,6 +234,8 @@ class Consultation(db.Model):
 
     patient = db.relationship("Patient", backref="consultations")
     doctor = db.relationship("User", foreign_keys=[doctor_id])
+    bill_id = db.Column(db.Integer, db.ForeignKey("bills.id", ondelete="SET NULL"), nullable=True)
+    bill = db.relationship("Bill", backref="consultations")
 
 class Prescription(db.Model):
     __tablename__ = "prescriptions"
@@ -272,6 +292,76 @@ class LabReport(db.Model):
     patient = db.relationship("Patient", backref="lab_reports")
     requested_by = db.relationship("User", foreign_keys=[requested_by_id])
     performed_by = db.relationship("User", foreign_keys=[performed_by_id])
+    bill_id = db.Column(db.Integer, db.ForeignKey("bills.id", ondelete="SET NULL"), nullable=True)
+    bill = db.relationship("Bill", backref="lab_reports")
+
+
+class Medicine(db.Model):
+    __tablename__ = "medicines"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    manufacturer = db.Column(db.String(100), nullable=True)
+    batch_number = db.Column(db.String(50), nullable=True)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
+    unit_price = db.Column(db.Numeric(10, 2), nullable=False, default=0.00)
+    expiry_date = db.Column(db.Date, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class DispensingRecord(db.Model):
+    __tablename__ = "dispensing_records"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False)
+    medicine_id = db.Column(db.Integer, db.ForeignKey("medicines.id"), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Numeric(10, 2), nullable=False)
+    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    dispensed_by_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    dispensed_date = db.Column(db.Date, nullable=False, default=date.today)
+    bill_id = db.Column(db.Integer, db.ForeignKey("bills.id", ondelete="SET NULL"), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    patient = db.relationship("Patient", backref="dispensed_medicines")
+    medicine = db.relationship("Medicine", backref="dispensing_records")
+    dispensed_by = db.relationship("User", foreign_keys=[dispensed_by_id])
+    bill = db.relationship("Bill", backref="dispensing_records")
+
+
+class Notification(db.Model):
+    __tablename__ = "notifications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True, index=True)
+    title = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    notification_type = db.Column(db.String(30), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default="Unread", index=True)
+    delivery_status = db.Column(db.String(20), nullable=False, default="Pending")
+    related_id = db.Column(db.Integer, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="notifications")
+
+
+class LoginActivity(db.Model):
+    __tablename__ = "login_activities"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    username = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(120), nullable=True)
+    role = db.Column(db.String(30), nullable=True)
+    ip_address = db.Column(db.String(45), nullable=True)
+    status = db.Column(db.String(20), nullable=False)
+    action = db.Column(db.String(20), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="login_activities")
+
 
 
 

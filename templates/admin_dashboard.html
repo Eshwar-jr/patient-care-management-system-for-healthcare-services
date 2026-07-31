@@ -16,7 +16,7 @@
 <!-- Statistics Cards -->
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card border-0 h-100">
+        <div class="card metric-card card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-people-fill"></i>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card doctor border-0 h-100">
+        <div class="card metric-card doctor card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-person-badge-fill"></i>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card nurse border-0 h-100">
+        <div class="card metric-card nurse card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-person-heart"></i>
@@ -52,7 +52,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card border-0 h-100">
+        <div class="card metric-card card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon bg-info-light text-info">
                     <i class="bi bi-file-earmark-medical"></i>
@@ -64,7 +64,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card border-0 h-100">
+        <div class="card metric-card card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon bg-primary-light text-primary">
                     <i class="bi bi-stethoscope"></i>
@@ -76,7 +76,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card border-0 h-100">
+        <div class="card metric-card card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon bg-success-light text-success">
                     <i class="bi bi-prescription2"></i>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card border-0 h-100">
+        <div class="card metric-card card-lift border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon bg-warning-light text-warning">
                     <i class="bi bi-radioactive"></i>
@@ -100,7 +100,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card appointment border-0 h-100">
+        <div class="card metric-card card-lift appointment border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-calendar-event"></i>
@@ -112,7 +112,7 @@
     </div>
 
     <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card treatment border-0 h-100">
+        <div class="card metric-card card-lift treatment border-0 h-100">
             <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-capsule-pill"></i>
@@ -122,12 +122,44 @@
             </div>
         </div>
     </div>
+
+    <!-- Pharmacy Inventory Metric -->
+    <div class="col-sm-6 col-md-3 col-xl-3">
+        <div class="card metric-card card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon" style="background: rgba(253, 224, 71, 0.15); color: #ca8a04;">
+                    <i class="bi bi-capsule"></i>
+                </div>
+                <h5>Pharmacy Stock</h5>
+                <h2 class="mb-1">{{ medicine_count }} <span class="fs-6 fw-normal text-muted">items</span></h2>
+                <small class="text-muted">{{ total_stock }} units total</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Billing Summary Metric -->
+    <div class="col-sm-6 col-md-6 col-xl-6">
+        <div class="card metric-card card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <div class="metric-icon" style="background: rgba(239, 68, 68, 0.15); color: #dc2626;">
+                    <i class="bi bi-cash-coin"></i>
+                </div>
+                <h5>Billing Summary</h5>
+                <h2 class="mb-1">₹{{ "%.2f"|format(total_billed) }}</h2>
+                <div class="d-flex justify-content-center gap-3 small mt-1">
+                    <span class="text-success">Paid: ₹{{ "%.0f"|format(total_paid) }}</span>
+                    <span class="text-danger">Pending: ₹{{ "%.0f"|format(total_pending) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row g-4">
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
     <!-- Donut Chart -->
-    <div class="col-lg-4">
-        <div class="card border-0 h-100">
+    <div class="col-lg-6">
+        <div class="card border-0 h-100 shadow-premium">
             <div class="card-header bg-transparent border-0 pt-4 pb-0 text-center">
                 <h5 class="fw-bold text-dark mb-0">Hospital Metrics Summary</h5>
             </div>
@@ -137,9 +169,24 @@
         </div>
     </div>
 
+    <!-- Billing Bar Chart -->
+    <div class="col-lg-6">
+        <div class="card border-0 h-100 shadow-premium">
+            <div class="card-header bg-transparent border-0 pt-4 pb-0 text-center">
+                <h5 class="fw-bold text-dark mb-0">Billing Analytics (INR)</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center" style="height:320px;">
+                <canvas id="billingChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lists Section -->
+<div class="row g-4 mb-4">
     <!-- Recent Patients -->
-    <div class="col-lg-4 col-md-6">
-        <div class="card border-0 h-100">
+    <div class="col-lg-6 col-md-6">
+        <div class="card border-0 h-100 shadow-premium">
             <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
                 <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-plus text-success me-2"></i>Recent Patients</h5>
                 <a href="{{ url_for('patients') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
@@ -174,8 +221,8 @@
     </div>
 
     <!-- Recent Appointments -->
-    <div class="col-lg-4 col-md-6">
-        <div class="card border-0 h-100">
+    <div class="col-lg-6 col-md-6">
+        <div class="card border-0 h-100 shadow-premium">
             <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
                 <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-check text-info me-2"></i>Recent Appointments</h5>
                 <a href="{{ url_for('appointments') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
@@ -209,64 +256,170 @@
         </div>
     </div>
 </div>
+
+<!-- Login Audit Log Section -->
+<div class="row g-4 mt-2">
+    <div class="col-12">
+        <div class="card border-0 shadow-premium">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center pt-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-primary me-2"></i>System Audit Trail: Recent Login & Session Actions</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr class="table-light">
+                                <th class="ps-4">Timestamp</th>
+                                <th>Email / Username</th>
+                                <th>Action</th>
+                                <th>Assigned Role</th>
+                                <th>Client IP Address</th>
+                                <th class="pe-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for log in login_activities %}
+                            <tr>
+                                <td class="ps-4 text-muted small">{{ log.timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                                <td><span class="fw-semibold text-dark">{{ log.email }}</span></td>
+                                <td>
+                                    {% if log.action == 'Login' %}
+                                        <span class="badge bg-primary bg-opacity-10 text-primary text-uppercase px-2.5 py-1" style="font-size: 0.7rem;">Login</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary text-uppercase px-2.5 py-1" style="font-size: 0.7rem;">Logout</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="text-capitalize small">{{ log.role or 'N/A' }}</span></td>
+                                <td><code>{{ log.ip_address }}</code></td>
+                                <td class="pe-4">
+                                    {% if log.status == 'Success' %}
+                                        <span class="badge bg-success rounded-pill px-2.5 py-1" style="font-size: 0.65rem;">Success</span>
+                                    {% else %}
+                                        <span class="badge bg-danger rounded-pill px-2.5 py-1" style="font-size: 0.65rem;">Failed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">No Login Activities Found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function(){
+    // General Metrics Donut Chart
     const ctx = document.getElementById("adminChart");
-    if(!ctx) return;
-
-    new Chart(ctx,{
-        type:"doughnut",
-        data:{
-            labels:[
-                "Patients",
-                "Doctors",
-                "Nurses",
-                "Appointments",
-                "Treatments",
-                "Bills"
-            ],
-            datasets:[{
-                data:[
-                    Number("{{ patient_count }}"),
-                    Number("{{ doctor_count }}"),
-                    Number("{{ nurse_count }}"),
-                    Number("{{ appointment_count }}"),
-                    Number("{{ treatment_count }}"),
-                    Number("{{ bill_count }}")
+    if(ctx) {
+        new Chart(ctx,{
+            type:"doughnut",
+            data:{
+                labels:[
+                    "Patients",
+                    "Doctors",
+                    "Nurses",
+                    "Appointments",
+                    "Treatments",
+                    "Bills"
                 ],
-                backgroundColor:[
-                    "#0284c7",
-                    "#0d9488",
-                    "#8b5cf6",
-                    "#f59e0b",
-                    "#06b6d4",
-                    "#ef4444"
-                ],
-                borderWidth: 2,
-                borderColor: "#ffffff"
-            }]
-        },
-        options:{
-            responsive:true,
-            maintainAspectRatio:false,
-            plugins:{
-                legend:{
-                    position:"right",
-                    labels: {
-                        font: {
-                            family: "'Poppins', sans-serif",
-                            size: 11
-                        },
-                        boxWidth: 12,
-                        padding: 15
+                datasets:[{
+                    data:[
+                        Number("{{ patient_count }}"),
+                        Number("{{ doctor_count }}"),
+                        Number("{{ nurse_count }}"),
+                        Number("{{ appointment_count }}"),
+                        Number("{{ treatment_count }}"),
+                        Number("{{ bill_count }}")
+                    ],
+                    backgroundColor:[
+                        "#0284c7",
+                        "#0d9488",
+                        "#8b5cf6",
+                        "#f59e0b",
+                        "#06b6d4",
+                        "#ef4444"
+                    ],
+                    borderWidth: 2,
+                    borderColor: "#ffffff"
+                }]
+            },
+            options:{
+                responsive:true,
+                maintainAspectRatio:false,
+                plugins:{
+                    legend:{
+                        position:"right",
+                        labels: {
+                            font: {
+                                family: "'Poppins', sans-serif",
+                                size: 11
+                            },
+                            boxWidth: 12,
+                            padding: 15
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
+
+    // Billing Analytics Bar Chart
+    const billingCtx = document.getElementById("billingChart");
+    if(billingCtx) {
+        new Chart(billingCtx, {
+            type: "bar",
+            data: {
+                labels: ["Total Billed", "Paid Revenue", "Outstanding Pending"],
+                datasets: [{
+                    label: "Amount (INR)",
+                    data: [
+                        Number("{{ total_billed }}"),
+                        Number("{{ total_paid }}"),
+                        Number("{{ total_pending }}")
+                    ],
+                    backgroundColor: [
+                        "rgba(2, 132, 199, 0.75)",  // Blue
+                        "rgba(13, 148, 136, 0.75)",  // Teal
+                        "rgba(239, 68, 68, 0.75)"    // Red
+                    ],
+                    borderColor: [
+                        "#0284c7",
+                        "#0d9488",
+                        "#ef4444"
+                    ],
+                    borderWidth: 1.5,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

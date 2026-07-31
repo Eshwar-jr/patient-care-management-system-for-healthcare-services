@@ -41,6 +41,14 @@
                 <p>Review personal health logs, clinical treatment schedules, appointments history, and billing records.</p>
             </a>
         </div>
+
+        <div class="col">
+            <a href="{{ url_for('login', role='pharmacist') }}" class="role-card">
+                <div class="icon text-danger">💊</div>
+                <h4>Pharmacist Portal</h4>
+                <p>Pharmacy stock management, dispensing medicines, tracking invoice records, and medication inventory.</p>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

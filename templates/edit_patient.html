@@ -2,9 +2,10 @@
 
 {% block content %}
 <div class="container py-2" style="max-width: 800px;">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-dark text-white py-3">
-            <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Patient Details</h4>
+    <div class="form-card">
+        <div class="form-card-header">
+            <h4 class="mb-0 fw-bold text-dark"><i class="bi bi-pencil-square text-primary me-2"></i>Edit Patient Details</h4>
+            <p class="text-muted mb-0 small">Modify demographics and conditions of registered patient record</p>
         </div>
         <div class="card-body p-4">
             <form method="POST">
@@ -13,43 +14,80 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         {{ form.full_name.label(class="form-label") }}
-                        {{ form.full_name(class="form-control") }}
+                        {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else "")) }}
+                        {% for error in form.full_name.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-3 mb-3">
                         {{ form.age.label(class="form-label") }}
-                        {{ form.age(class="form-control") }}
+                        {{ form.age(class="form-control" + (" is-invalid" if form.age.errors else "")) }}
+                        {% for error in form.age.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-3 mb-3">
                         {{ form.gender.label(class="form-label") }}
-                        {{ form.gender(class="form-select") }}
+                        {{ form.gender(class="form-select" + (" is-invalid" if form.gender.errors else "")) }}
+                        {% for error in form.gender.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-6 mb-3">
                         {{ form.phone.label(class="form-label") }}
-                        {{ form.phone(class="form-control") }}
+                        {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                        {% for error in form.phone.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-6 mb-3">
                         {{ form.blood_group.label(class="form-label") }}
-                        {{ form.blood_group(class="form-select") }}
+                        {{ form.blood_group(class="form-select" + (" is-invalid" if form.blood_group.errors else "")) }}
+                        {% for error in form.blood_group.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="john.doe@example.com") }}
+                        {% for error in form.email.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        {{ form.aadhaar.label(class="form-label") }}
+                        {{ form.aadhaar(class="form-control" + (" is-invalid" if form.aadhaar.errors else ""), placeholder="123456789012") }}
+                        {% for error in form.aadhaar.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-12 mb-3">
                         {{ form.address.label(class="form-label") }}
-                        {{ form.address(class="form-control") }}
+                        {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else "")) }}
+                        {% for error in form.address.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md-12 mb-4">
                         {{ form.disease.label(class="form-label") }}
-                        {{ form.disease(class="form-control") }}
+                        {{ form.disease(class="form-control" + (" is-invalid" if form.disease.errors else "")) }}
+                        {% for error in form.disease.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
                 </div>
 
                 <div class="d-flex gap-2">
-                    {{ form.submit(class="btn btn-warning px-4", value="Update Patient") }}
-                    <a href="{{ url_for('patients') }}" class="btn btn-secondary px-4">
+                    {{ form.submit(class="btn btn-primary px-4", value="Update Patient") }}
+                    <a href="{{ url_for('patients') }}" class="btn btn-outline-secondary px-4">
                         Cancel
                     </a>
                 </div>

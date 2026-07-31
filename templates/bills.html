@@ -13,33 +13,61 @@
         <h2 class="fw-bold text-dark mb-1">💳 Billing Management</h2>
         <p class="text-muted mb-0 small">Overview of clinic financial records and invoices</p>
     </div>
-    {% if current_user.role.lower() != 'patient' %}
-    <a href="{{ url_for('add_bill') }}" class="btn btn-primary shadow-sm">
-        <i class="bi bi-plus-circle"></i> Add Bill
-    </a>
-    {% endif %}
-</div>
-
-<!-- Search Box -->
-<div class="row mb-4">
-    <div class="col-md-5 col-lg-4">
-        <div class="input-group shadow-sm">
-            <span class="input-group-text bg-white border-end-0 text-muted">
-                <i class="bi bi-search"></i>
-            </span>
-            <input
-                type="text"
-                id="billSearch"
-                class="form-control border-start-0 ps-0 bg-white"
-                placeholder="Search bills database...">
-        </div>
+    <div class="d-flex gap-2">
+        {% if current_user.role.lower() != 'patient' %}
+        <a href="{{ url_for('billing_dashboard') }}" class="btn btn-outline-primary shadow-sm">
+            <i class="bi bi-wallet2"></i> Billing Dashboard
+        </a>
+        <a href="{{ url_for('add_bill') }}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-circle"></i> Add Bill
+        </a>
+        {% endif %}
     </div>
 </div>
 
+<!-- Search & Status Filter Panel -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-3">
+        <form method="GET" action="{{ url_for('bills') }}" class="row g-3 align-items-center">
+            <!-- Hidden status tracker -->
+            <input type="hidden" name="status" value="{{ status_filter }}">
+
+            <!-- Status filter selector tabs -->
+            <div class="col-lg-7 d-flex flex-wrap gap-1 align-items-center">
+                <span class="fw-bold text-dark me-2 small text-uppercase">Filter Status:</span>
+                <a href="{{ url_for('bills', status='all', search=search_query) }}" class="btn btn-sm {% if status_filter == 'all' or not status_filter %}btn-dark{% else %}btn-outline-secondary{% endif %}">All</a>
+                <a href="{{ url_for('bills', status='paid', search=search_query) }}" class="btn btn-sm {% if status_filter == 'paid' %}btn-success{% else %}btn-outline-success{% endif %}">Paid</a>
+                <a href="{{ url_for('bills', status='pending', search=search_query) }}" class="btn btn-sm {% if status_filter == 'pending' %}btn-warning text-dark{% else %}btn-outline-warning{% endif %}">Pending</a>
+                <a href="{{ url_for('bills', status='overdue', search=search_query) }}" class="btn btn-sm {% if status_filter == 'overdue' %}btn-danger{% else %}btn-outline-danger{% endif %}">Overdue</a>
+            </div>
+
+            <!-- Search box -->
+            <div class="col-lg-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control border-start-0 bg-light"
+                        placeholder="Search patient name..."
+                        value="{{ search_query or '' }}">
+                    <button type="submit" class="btn btn-dark">Search</button>
+                    {% if search_query or status_filter != 'all' %}
+                    <a href="{{ url_for('bills', status='all') }}" class="btn btn-outline-secondary">Clear</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if bills %}
 <div class="card border-0 shadow-sm">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="billTable">
+            <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th width="80">ID</th>
@@ -47,9 +75,7 @@
                         <th>Amount</th>
                         <th>Status</th>
                         <th>Date</th>
-                        {% if current_user.role.lower() != 'patient' %}
-                        <th width="200" class="text-center">Actions</th>
-                        {% endif %}
+                        <th width="280" class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,32 +88,33 @@
                     <td class="fw-bold text-dark">₹ {{ "{:,.2f}".format(bill.amount) }}</td>
                     <td>
                         {% if bill.payment_status == 'Paid' %}
-                            <span class="badge bg-paid">Paid</span>
-                        {% elif bill.payment_status == 'Pending' %}
-                            <span class="badge bg-pending">Pending</span>
+                            <span class="badge bg-success">Paid</span>
+                        {% elif bill.payment_status == 'Pending' and bill.bill_date <= overdue_limit %}
+                            <span class="badge bg-danger">Overdue</span>
                         {% else %}
-                            <span class="badge bg-unpaid">{{ bill.payment_status }}</span>
+                            <span class="badge bg-warning text-dark">Pending</span>
                         {% endif %}
                     </td>
-                    <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ bill.bill_date }}</td>
-                    {% if current_user.role.lower() != 'patient' %}
+                    <td><i class="bi bi-calendar3 text-muted me-1 small"></i>{{ bill.bill_date.strftime('%Y-%m-%d') }}</td>
                     <td class="text-center">
-                        <div class="d-inline-flex gap-1">
-                            <a href="{{ url_for('edit_bill', id=bill.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
+                        <div class="d-inline-flex gap-1 flex-wrap justify-content-center">
+                            <a href="{{ url_for('view_bill', id=bill.id) }}" class="btn btn-outline-primary btn-sm py-1 px-2" title="View Printable Invoice">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            {% if bill.payment_status == 'Pending' and current_user.role.lower() == 'admin' %}
+                            <a href="{{ url_for('record_payment', id=bill.id) }}" class="btn btn-success btn-sm py-1 px-2" title="Record Payment">
+                                <i class="bi bi-check-circle"></i> Pay
+                            </a>
+                            {% endif %}
+                            {% if current_user.role.lower() == 'admin' %}
+                            <a href="{{ url_for('edit_bill', id=bill.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2" title="Edit Bill parameters">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
-                            <a href="{{ url_for('delete_bill', id=bill.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Delete this bill?')">
+                            <a href="{{ url_for('delete_bill', id=bill.id) }}" class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Delete this bill?')" title="Delete Bill">
                                 <i class="bi bi-trash"></i> Delete
                             </a>
+                            {% endif %}
                         </div>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="{% if current_user.role.lower() == 'patient' %}5{% else %}6{% endif %}" class="text-center text-muted py-5">
-                        <i class="bi bi-credit-card-2-back fs-2 mb-2 d-block"></i>
-                        No Bills Available
                     </td>
                 </tr>
                 {% endfor %}
@@ -96,16 +123,19 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% else %}
+<div class="empty-state shadow-premium">
+    <div class="empty-state-icon">
+        <i class="bi bi-credit-card-2-back"></i>
+    </div>
+    <h4 class="fw-bold text-dark mb-2">No Bills Found</h4>
+    <p class="text-muted mb-4 max-width-md mx-auto">There are no billing records or payment invoices logged matching this filter criteria.</p>
+    {% if current_user.role.lower() != 'patient' %}
+    <a href="{{ url_for('add_bill') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Bill
+    </a>
+    {% endif %}
+</div>
+{% endif %}
 
-{% block scripts %}
-<script>
-document.getElementById("billSearch").addEventListener("keyup", function() {
-    let value = this.value.toLowerCase();
-    let rows = document.querySelectorAll("#billTable tbody tr");
-    rows.forEach(function(row){
-        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
-    });
-});
-</script>
 {% endblock %}

@@ -1,0 +1,57 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 600px;">
+    <div class="form-card">
+        <div class="form-card-header bg-success-light border-success-light">
+            <h4 class="mb-0 fw-bold text-dark"><i class="bi bi-wallet2 text-success me-2"></i>Record Bill Payment</h4>
+            <p class="text-muted mb-0 small">Mark invoice #{{ bill.id }} as paid by recording collection parameters</p>
+        </div>
+        <div class="card-body p-4">
+            <!-- Current Invoice Summary Card -->
+            <div class="p-3 bg-light rounded-3 mb-4">
+                <div class="row g-2 align-items-center">
+                    <div class="col-8 border-end">
+                        <div class="text-muted small">Patient Billed</div>
+                        <div class="fw-bold text-dark fs-6">{{ bill.patient.full_name }}</div>
+                        <div class="text-muted small mt-1">Invoice Date: {{ bill.bill_date.strftime('%Y-%m-%d') }}</div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div class="text-muted small">Amount Due</div>
+                        <div class="fs-4 fw-extrabold text-success">₹ {{ "{:,.2f}".format(bill.amount) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <!-- Payment Method Field -->
+                <div class="mb-3">
+                    {{ form.payment_method.label(class="form-label fw-bold") }}
+                    {{ form.payment_method(class="form-select form-select-lg") }}
+                    {% for error in form.payment_method.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Payment Date Field -->
+                <div class="mb-4">
+                    {{ form.payment_date.label(class="form-label fw-bold") }}
+                    {{ form.payment_date(class="form-control form-control-lg") }}
+                    {% for error in form.payment_date.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="{{ url_for('view_bill', id=bill.id) }}" class="btn btn-outline-secondary px-4">
+                        Cancel
+                    </a>
+                    {{ form.submit(class="btn btn-success px-4 fw-bold") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

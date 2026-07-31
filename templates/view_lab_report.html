@@ -6,11 +6,16 @@
         <a href="{{ url_for('lab_reports') }}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left me-1"></i> Back to Lab Reports
         </a>
-        {% if current_user.role.lower() in ['nurse', 'doctor', 'admin'] %}
-        <a href="{{ url_for('update_lab_report', id=lab_report.id) }}" class="btn btn-warning btn-sm fw-semibold">
-            <i class="bi bi-pencil-square me-1"></i> Update Lab Results
-        </a>
-        {% endif %}
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-outline-primary btn-sm fw-semibold">
+                <i class="bi bi-printer me-1"></i> Print Report
+            </button>
+            {% if current_user.role.lower() in ['nurse', 'doctor', 'admin'] %}
+            <a href="{{ url_for('update_lab_report', id=lab_report.id) }}" class="btn btn-warning btn-sm fw-semibold">
+                <i class="bi bi-pencil-square me-1"></i> Update Lab Results
+            </a>
+            {% endif %}
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">

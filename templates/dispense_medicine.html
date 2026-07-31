@@ -1,0 +1,149 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-2" style="max-width: 700px;">
+    <div class="form-card">
+        <div class="form-card-header bg-success-light border-success-light">
+            <h4 class="mb-0 fw-bold text-dark"><i class="bi bi-cart-plus text-success me-2"></i>Dispense Medicine</h4>
+            <p class="text-muted mb-0 small">Select a patient, a drug, and dispense it directly to generate a billing transaction</p>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST" id="dispenseForm">
+                {{ form.hidden_tag() }}
+
+                <!-- Patient Field -->
+                <div class="mb-3">
+                    {{ form.patient.label(class="form-label fw-semibold") }}
+                    {{ form.patient(class="form-select form-select-lg", id="patient_select") }}
+                    {% for error in form.patient.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Medicine Field -->
+                <div class="mb-3">
+                    {{ form.medicine.label(class="form-label fw-semibold") }}
+                    {{ form.medicine(class="form-select form-select-lg", id="medicine_select") }}
+                    {% for error in form.medicine.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Stock & Expiry Info Panel (Dynamic) -->
+                <div class="p-3 bg-light rounded-3 mb-4 d-none" id="info_panel">
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <div class="text-muted small">Available Stock</div>
+                            <div class="fs-5 fw-bold" id="info_stock">0 unit(s)</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-muted small">Expiry Date / Status</div>
+                            <div class="fs-5 fw-bold" id="info_expiry">N/A</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quantity Field -->
+                <div class="mb-4">
+                    {{ form.quantity.label(class="form-label fw-semibold") }}
+                    {{ form.quantity(class="form-control form-control-lg text-center", id="quantity_input", placeholder="Enter quantity to dispense", min="1") }}
+                    {% for error in form.quantity.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Dynamic Cost Calculator Pane -->
+                <div class="card border-dashed p-3 mb-4 text-center bg-success bg-opacity-10 d-none" id="calc_panel">
+                    <div class="text-success small fw-semibold text-uppercase tracking-wider">Dispensing Charges Summary</div>
+                    <div class="fs-2 fw-bold text-success" id="calc_total">₹0.00</div>
+                    <div class="text-muted small" id="calc_breakdown">0 unit(s) × ₹0.00 each</div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="{{ url_for('pharmacy_dashboard') }}" class="btn btn-outline-secondary px-4">
+                        Cancel
+                    </a>
+                    {{ form.submit(class="btn btn-success px-4 fw-bold") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Construct drug data object from Jinja list
+    const medicines = {
+        {% for med in medicines %}
+        "{{ med.id }}": {
+            "price": {{ med.unit_price }},
+            "stock": {{ med.quantity }},
+            "expiry": "{{ med.expiry_date.strftime('%Y-%m-%d') }}",
+            "isExpired": {% if med.expiry_date < date.today() %}true{% else %}false{% endif %}
+        },
+        {% endfor %}
+    };
+
+    const medicineSelect = document.getElementById("medicine_select");
+    const quantityInput = document.getElementById("quantity_input");
+    const infoPanel = document.getElementById("info_panel");
+    const infoStock = document.getElementById("info_stock");
+    const infoExpiry = document.getElementById("info_expiry");
+    const calcPanel = document.getElementById("calc_panel");
+    const calcTotal = document.getElementById("calc_total");
+    const calcBreakdown = document.getElementById("calc_breakdown");
+
+    function updateCalculations() {
+        const medId = medicineSelect.value;
+        const qty = parseInt(quantityInput.value) || 0;
+
+        if (!medId || !medicines[medId]) {
+            infoPanel.classList.add("d-none");
+            calcPanel.classList.add("d-none");
+            return;
+        }
+
+        const med = medicines[medId];
+        
+        // Show info panel
+        infoPanel.classList.remove("d-none");
+        infoStock.textContent = `${med.stock} unit(s)`;
+        
+        // Expiry formatting
+        if (med.isExpired) {
+            infoExpiry.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-circle-fill"></i> Expired (${med.expiry})</span>`;
+            infoStock.className = "fs-5 fw-bold text-danger";
+        } else {
+            infoExpiry.innerHTML = `<span class="text-success"><i class="bi bi-check-circle-fill"></i> Active (${med.expiry})</span>`;
+            if (med.stock === 0) {
+                infoStock.className = "fs-5 fw-bold text-danger";
+            } else if (med.stock < 10) {
+                infoStock.className = "fs-5 fw-bold text-warning";
+            } else {
+                infoStock.className = "fs-5 fw-bold text-success";
+            }
+        }
+
+        // Calculations panel
+        if (qty > 0) {
+            calcPanel.classList.remove("d-none");
+            const total = qty * med.price;
+            calcTotal.textContent = `₹${total.toFixed(2)}`;
+            calcBreakdown.textContent = `${qty} unit(s) × ₹${med.price.toFixed(2)} each`;
+        } else {
+            calcPanel.classList.add("d-none");
+        }
+    }
+
+    if (medicineSelect && quantityInput) {
+        medicineSelect.addEventListener("change", updateCalculations);
+        quantityInput.addEventListener("input", updateCalculations);
+        
+        // Initial setup trigger
+        updateCalculations();
+    }
+});
+</script>
+{% endblock %}

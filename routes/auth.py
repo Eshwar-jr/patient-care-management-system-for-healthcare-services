@@ -1,9 +1,9 @@
-from flask import render_template, redirect, url_for, flash
-from flask_login import login_user, logout_user, login_required
+from flask import render_template, redirect, url_for, flash, request
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from forms import RegistrationForm, LoginForm
-from models import User
+from models import User, LoginActivity
 from extensions import db
 from app import app
 
@@ -73,80 +73,94 @@ def register():
     )
 
 
+@app.route("/login", defaults={"role": "default"}, methods=["GET", "POST"])
 @app.route("/login/<role>", methods=["GET", "POST"])
 def login(role):
-
+    if request.path == "/login":
+        return redirect(url_for("select_role"))
     role = role.lower()
-
     form = LoginForm()
 
     if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
 
-        user = User.query.filter_by(
-            email=form.email.data
-        ).first()
-
-        if user and check_password_hash(
-            user.password,
-            form.password.data
-        ):
-
+        if user and check_password_hash(user.password, form.password.data):
             if user.role.lower() != role:
-
-                flash(
-                    "You selected the wrong login portal.",
-                    "danger"
+                activity = LoginActivity(
+                    user_id=user.id,
+                    username=user.username,
+                    email=user.email,
+                    role=user.role,
+                    ip_address=request.remote_addr,
+                    status="Failed",
+                    action="Login"
                 )
+                db.session.add(activity)
+                db.session.commit()
 
-                return redirect(
-                    url_for("login", role=role)
-                )
+                flash("You selected the wrong login portal.", "danger")
+                return redirect(url_for("login", role=role))
 
-            login_user(
-                user,
-                remember=form.remember.data
+            activity = LoginActivity(
+                user_id=user.id,
+                username=user.username,
+                email=user.email,
+                role=user.role,
+                ip_address=request.remote_addr,
+                status="Success",
+                action="Login"
             )
+            db.session.add(activity)
+            db.session.commit()
 
-            flash(
-                "Login Successful!",
-                "success"
-            )
+            login_user(user, remember=form.remember.data)
+            flash("Login Successful!", "success")
 
             if role == "admin":
-                return redirect(
-                    url_for("admin_dashboard")
-                )
-
+                return redirect(url_for("admin_dashboard"))
             elif role == "doctor":
-                return redirect(
-                    url_for("doctor_dashboard")
-                )
-
+                return redirect(url_for("doctor_dashboard"))
             elif role == "nurse":
-                return redirect(
-                    url_for("nurse_dashboard")
-                )
+                return redirect(url_for("nurse_dashboard"))
             elif role == "patient":
-                return redirect(
-                    url_for("patient_dashboard")
+                return redirect(url_for("patient_dashboard"))
+            elif role == "pharmacist":
+                return redirect(url_for("pharmacy_dashboard"))
+
+        else:
+            activity = LoginActivity(
+                user_id=user.id if user else None,
+                username=form.email.data,
+                email=form.email.data,
+                role=role,
+                ip_address=request.remote_addr,
+                status="Failed",
+                action="Login"
             )
+            db.session.add(activity)
+            db.session.commit()
 
-        flash(
-            "Invalid email or password.",
-            "danger"
-        )
+            flash("Invalid email or password.", "danger")
 
-    return render_template(
-        "login.html",
-        form=form,
-        role=role
-    )
+    return render_template("login.html", form=form, role=role)
+
+
 @app.route("/logout")
 @login_required
 def logout():
+    if current_user.is_authenticated:
+        activity = LoginActivity(
+            user_id=current_user.id,
+            username=current_user.username,
+            email=current_user.email,
+            role=current_user.role,
+            ip_address=request.remote_addr,
+            status="Success",
+            action="Logout"
+        )
+        db.session.add(activity)
+        db.session.commit()
 
     logout_user()
-
     flash("Logged out successfully.", "success")
-
     return redirect(url_for("select_role"))

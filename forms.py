@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, SubmitField, BooleanField, IntegerField, DateField, TimeField, TextAreaField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, Optional, Regexp, NumberRange
 from wtforms.fields import DecimalField
 
 class RegistrationForm(FlaskForm):
@@ -36,7 +36,8 @@ class RegistrationForm(FlaskForm):
             ("Patient", "Patient"),
             ("Doctor", "Doctor"),
             ("Nurse", "Nurse"),
-            ("Admin", "Admin")
+            ("Admin", "Admin"),
+            ("Pharmacist", "Pharmacist")
         ]
     )
     submit = SubmitField("Register")
@@ -108,6 +109,16 @@ class PatientForm(FlaskForm):
         validators=[DataRequired()]
     )
 
+    email = StringField(
+        "Email Address",
+        validators=[Optional(), Email(message="Invalid email address format")]
+    )
+
+    aadhaar = StringField(
+        "Aadhaar Number",
+        validators=[Optional(), Regexp(r"^\d{12}$", message="Aadhaar Number must be exactly 12 digits")]
+    )
+
     submit = SubmitField("Save Patient")
 
 
@@ -170,6 +181,12 @@ class TreatmentForm(FlaskForm):
         "Treatment Date",
         format="%Y-%m-%d",
         validators=[DataRequired()]
+    )
+
+    treatment_cost = DecimalField(
+        "Treatment Cost (₹)",
+        default=1000.00,
+        validators=[Optional()]
     )
 
     submit = SubmitField(
@@ -259,6 +276,12 @@ class ConsultationForm(FlaskForm):
 
     notes = TextAreaField("Consultation Notes")
 
+    fee = DecimalField(
+        "Consultation Fee (₹)",
+        default=500.00,
+        validators=[Optional()]
+    )
+
     submit = SubmitField("Save Consultation")
 
 
@@ -322,6 +345,12 @@ class LabReportRequestForm(FlaskForm):
 
     lab_notes = TextAreaField("Instructions for Lab Staff")
 
+    test_cost = DecimalField(
+        "Test Cost (₹)",
+        default=300.00,
+        validators=[Optional()]
+    )
+
     submit = SubmitField("Request Lab Test")
 
 
@@ -350,6 +379,52 @@ class LabReportResultForm(FlaskForm):
     lab_notes = TextAreaField("Lab Technician Notes")
 
     submit = SubmitField("Save Lab Results")
+
+
+class MedicineForm(FlaskForm):
+    name = StringField("Medicine Name", validators=[DataRequired(message="Medicine name is required")])
+    category = SelectField("Category / Type", choices=[
+        ("Tablet", "Tablet"),
+        ("Capsule", "Capsule"),
+        ("Syrup", "Syrup"),
+        ("Injection", "Injection"),
+        ("Ointment", "Ointment"),
+        ("Drops", "Drops"),
+        ("Inhaler", "Inhaler"),
+        ("Other", "Other")
+    ], validators=[DataRequired()])
+    manufacturer = StringField("Manufacturer", validators=[Optional()])
+    batch_number = StringField("Batch Number", validators=[Optional()])
+    quantity = IntegerField("Stock Quantity", validators=[DataRequired(), NumberRange(min=0, message="Quantity must be greater than or equal to 0")])
+    unit_price = DecimalField("Unit Price (₹)", validators=[DataRequired(), NumberRange(min=0.0, message="Unit price must be greater than or equal to 0.00")])
+    expiry_date = DateField("Expiry Date", format="%Y-%m-%d", validators=[DataRequired(message="Valid expiry date is required")])
+    description = TextAreaField("Description", validators=[Optional()])
+    submit = SubmitField("Save Medicine")
+
+
+class DispenseForm(FlaskForm):
+    patient = SelectField("Patient", coerce=int, validators=[DataRequired(message="Patient selection is required")])
+    medicine = SelectField("Medicine", coerce=int, validators=[DataRequired(message="Medicine selection is required")])
+    quantity = IntegerField("Quantity to Dispense", validators=[DataRequired(), NumberRange(min=1, message="Dispensing quantity must be at least 1")])
+    submit = SubmitField("Dispense Medicine")
+
+
+class StockUpdateForm(FlaskForm):
+    quantity = IntegerField("Replenish Quantity", validators=[DataRequired(), NumberRange(min=1, message="Stock update quantity must be at least 1")])
+    submit = SubmitField("Update Stock")
+
+
+class RecordPaymentForm(FlaskForm):
+    payment_method = SelectField("Payment Method", choices=[
+        ("Cash", "Cash"),
+        ("Card", "Card"),
+        ("UPI", "UPI"),
+        ("Net Banking", "Net Banking")
+    ], validators=[DataRequired(message="Please select a payment method")])
+    payment_date = DateField("Payment Date", format="%Y-%m-%d", validators=[DataRequired(message="Please select a payment date")])
+    submit = SubmitField("Record Payment")
+
+
 
 
 

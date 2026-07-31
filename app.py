@@ -14,6 +14,7 @@ login_manager.login_view = "login"
 
 from routes.auth import *
 from routes.dashboard import *
+from routes.api import *
 from models import User
 
 if __name__ == "__main__":

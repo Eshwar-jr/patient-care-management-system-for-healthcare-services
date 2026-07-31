@@ -1,0 +1,129 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Notifications Hub</h2>
+        <p class="text-muted mb-0">Stay updated with your latest clinical and billing activities</p>
+    </div>
+    {% if notifications %}
+        <form action="{{ url_for('read_all_notifications') }}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-check2-all fs-6"></i> Mark All as Read
+            </button>
+        </form>
+    {% endif %}
+</div>
+
+<!-- Stats Counter -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-4">
+        <div class="card border-0 shadow-premium p-3 text-center h-100">
+            <h5 class="text-muted small text-uppercase mb-2 fw-semibold">Unread</h5>
+            <h2 class="fw-bold text-danger mb-0">
+                {{ notifications | selectattr("status", "equalto", "Unread") | list | length }}
+            </h2>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card border-0 shadow-premium p-3 text-center h-100">
+            <h5 class="text-muted small text-uppercase mb-2 fw-semibold">Delivered</h5>
+            <h2 class="fw-bold text-info mb-0">
+                {{ notifications | selectattr("delivery_status", "equalto", "Delivered") | list | length }}
+            </h2>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card border-0 shadow-premium p-3 text-center h-100">
+            <h5 class="text-muted small text-uppercase mb-2 fw-semibold">Total</h5>
+            <h2 class="fw-bold text-dark mb-0">
+                {{ notifications | length }}
+            </h2>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications List -->
+<div class="card border-0 shadow-premium">
+    <div class="card-body p-0">
+        {% if notifications %}
+            <div class="list-group list-group-flush rounded-3">
+                {% for n in notifications %}
+                    {% set badge_color = 'bg-secondary' %}
+                    {% set icon = 'bi-bell' %}
+                    {% if n.notification_type == 'Appointment' %}
+                        {% set badge_color = 'bg-info bg-opacity-15 text-info' %}
+                        {% set icon = 'bi-calendar-event' %}
+                    {% elif n.notification_type == 'Laboratory' %}
+                        {% set badge_color = 'bg-warning bg-opacity-15 text-warning-dark' %}
+                        {% set icon = 'bi-radioactive' %}
+                    {% elif n.notification_type == 'Prescription' %}
+                        {% set badge_color = 'bg-success bg-opacity-15 text-success' %}
+                        {% set icon = 'bi-prescription2' %}
+                    {% elif n.notification_type == 'Billing' %}
+                        {% set badge_color = 'bg-danger bg-opacity-15 text-danger' %}
+                        {% set icon = 'bi-credit-card' %}
+                    {% endif %}
+
+                    <div class="list-group-item p-4 d-flex align-items-start gap-3 {% if n.status == 'Unread' %}bg-light bg-opacity-50 border-start border-4 border-primary{% endif %}" style="transition: background-color 0.2s ease;">
+                        <!-- Icon Circle -->
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; background: rgba(0,0,0,0.03);">
+                            <i class="bi {{ icon }} fs-5 {% if n.status == 'Unread' %}text-primary{% else %}text-secondary{% endif %}"></i>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
+                                <span class="badge {{ badge_color }} text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                                    {{ n.notification_type }}
+                                </span>
+                                {% if n.status == 'Unread' %}
+                                    <span class="badge bg-danger rounded-pill fw-semibold" style="font-size: 0.65rem;">Unread</span>
+                                {% else %}
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill fw-semibold" style="font-size: 0.65rem;">Read</span>
+                                {% endif %}
+                                <small class="text-muted ms-sm-auto flex-shrink-0">
+                                    <i class="bi bi-clock me-1"></i>{{ n.created_at.strftime('%Y-%m-%d %I:%M %p') }}
+                                </small>
+                            </div>
+                            <h6 class="fw-semibold text-dark mb-1 mt-1">{{ n.title }}</h6>
+                            <p class="text-secondary mb-0 text-truncate-2" style="font-size: 0.9rem; line-height: 1.5;">
+                                {{ n.message }}
+                            </p>
+                        </div>
+
+                        <!-- Action Form -->
+                        {% if n.status == 'Unread' %}
+                            <form action="{{ url_for('read_notification', id=n.id) }}" method="POST" class="flex-shrink-0 align-self-center ms-2">
+                                <button type="submit" class="btn btn-sm btn-outline-success rounded-pill d-flex align-items-center gap-1 py-1 px-3" title="Mark as Read">
+                                    <i class="bi bi-check"></i> Read
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state py-5 text-center">
+                <div class="empty-state-icon">
+                    <i class="bi bi-bell-slash"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">All Caught Up!</h5>
+                <p class="text-muted mb-0">You have no new notifications at this moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .text-warning-dark {
+        color: #b45309 !important;
+    }
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
