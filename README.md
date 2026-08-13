@@ -84,3 +84,6 @@ python -m unittest tests/test_security.py
 python -m unittest tests/test_performance.py
 python -m unittest tests/test_uat_workflow.py
 ```
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
