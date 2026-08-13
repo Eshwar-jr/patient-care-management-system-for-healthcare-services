@@ -1,0 +1,130 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-3" style="max-width: 800px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1"><i class="bi bi-star-half text-warning me-2"></i>Patient Feedback & Ratings</h3>
+            <p class="text-muted small mb-0">Share your clinical visit experience to help us improve our care services.</p>
+        </div>
+        <a href="{{ url_for('feedbacks') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i> Back to Feedback History
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <form method="POST" action="{{ url_for('add_feedback') }}">
+                {{ form.hidden_tag() }}
+
+                <!-- Consultation Select -->
+                <div class="mb-4">
+                    <label for="consultation" class="form-label fw-semibold text-dark">Select Consultation Visit <span class="text-danger">*</span></label>
+                    {{ form.consultation(class="form-select border-1", id="consultation") }}
+                    {% if form.consultation.errors %}
+                        <div class="text-danger small mt-1">{{ form.consultation.errors[0] }}</div>
+                    {% endif %}
+                    <div class="form-text text-muted small">Choose the completed doctor consultation you wish to rate.</div>
+                </div>
+
+                <hr class="my-4 text-muted opacity-25">
+
+                <!-- 1-5 Star Ratings Matrix -->
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-sliders text-primary me-2"></i>Service Ratings (1 to 5 Stars)</h5>
+
+                <div class="row g-3 mb-4">
+                    <!-- Doctor Performance -->
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <label for="doctor_rating" class="form-label fw-bold text-dark d-flex justify-content-between">
+                                <span><i class="bi bi-person-badge text-primary me-1"></i> Doctor Performance</span>
+                                <span class="badge bg-primary rounded-pill" id="doc_badge">5 Stars</span>
+                            </label>
+                            {{ form.doctor_rating(class="form-range", type="range", min="1", max="5", step="1", id="doctor_rating", oninput="document.getElementById('doc_badge').innerText = this.value + ' Stars'") }}
+                            {% if form.doctor_rating.errors %}
+                                <div class="text-danger small mt-1">{{ form.doctor_rating.errors[0] }}</div>
+                            {% endif %}
+                            <div class="d-flex justify-content-between text-muted" style="font-size: 0.75rem;">
+                                <span>1 (Poor)</span>
+                                <span>3 (Average)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hospital Services -->
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <label for="hospital_rating" class="form-label fw-bold text-dark d-flex justify-content-between">
+                                <span><i class="bi bi-hospital text-success me-1"></i> Hospital Facilities</span>
+                                <span class="badge bg-success rounded-pill" id="hosp_badge">5 Stars</span>
+                            </label>
+                            {{ form.hospital_rating(class="form-range", type="range", min="1", max="5", step="1", id="hospital_rating", oninput="document.getElementById('hosp_badge').innerText = this.value + ' Stars'") }}
+                            {% if form.hospital_rating.errors %}
+                                <div class="text-danger small mt-1">{{ form.hospital_rating.errors[0] }}</div>
+                            {% endif %}
+                            <div class="d-flex justify-content-between text-muted" style="font-size: 0.75rem;">
+                                <span>1 (Poor)</span>
+                                <span>3 (Average)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Laboratory Services -->
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <label for="lab_rating" class="form-label fw-bold text-dark d-flex justify-content-between">
+                                <span><i class="bi bi-radioactive text-warning me-1"></i> Laboratory Services</span>
+                                <span class="badge bg-warning text-dark rounded-pill" id="lab_badge">5 Stars</span>
+                            </label>
+                            {{ form.lab_rating(class="form-range", type="range", min="1", max="5", step="1", id="lab_rating", oninput="document.getElementById('lab_badge').innerText = this.value + ' Stars'") }}
+                            {% if form.lab_rating.errors %}
+                                <div class="text-danger small mt-1">{{ form.lab_rating.errors[0] }}</div>
+                            {% endif %}
+                            <div class="d-flex justify-content-between text-muted" style="font-size: 0.75rem;">
+                                <span>1 (Poor)</span>
+                                <span>3 (Average)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pharmacy Services -->
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <label for="pharmacy_rating" class="form-label fw-bold text-dark d-flex justify-content-between">
+                                <span><i class="bi bi-capsule text-danger me-1"></i> Pharmacy Dispensing</span>
+                                <span class="badge bg-danger rounded-pill" id="pharm_badge">5 Stars</span>
+                            </label>
+                            {{ form.pharmacy_rating(class="form-range", type="range", min="1", max="5", step="1", id="pharmacy_rating", oninput="document.getElementById('pharm_badge').innerText = this.value + ' Stars'") }}
+                            {% if form.pharmacy_rating.errors %}
+                                <div class="text-danger small mt-1">{{ form.pharmacy_rating.errors[0] }}</div>
+                            {% endif %}
+                            <div class="d-flex justify-content-between text-muted" style="font-size: 0.75rem;">
+                                <span>1 (Poor)</span>
+                                <span>3 (Average)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Field -->
+                <div class="mb-4">
+                    <label for="comments" class="form-label fw-semibold text-dark">Comments & Feedback Suggestions</label>
+                    {{ form.comments(class="form-control border-1", rows="4", id="comments", placeholder="Please share any additional details about your treatment, staff behavior, or facility cleanliness...") }}
+                    {% if form.comments.errors %}
+                        <div class="text-danger small mt-1">{{ form.comments.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ url_for('feedbacks') }}" class="btn btn-light px-4">Cancel</a>
+                    {{ form.submit(class="btn btn-primary px-4 fw-semibold") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

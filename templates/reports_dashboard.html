@@ -1,0 +1,127 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Administrative Reporting</h2>
+        <p class="text-muted mb-0">Generate, print, and export hospital-wide clinical, scheduling, and performance reports</p>
+    </div>
+    <div class="text-muted fs-7 bg-white px-3 py-2 rounded-3 border">
+        <i class="bi bi-file-earmark-bar-graph text-primary me-2"></i><strong>Reporting Center</strong>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Patient Registrations Report -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-primary-light text-primary mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Patient Registrations</h5>
+                <p class="text-muted small mb-4">Detailed registry reports of patients filtered by registration date, age group, and gender.</p>
+                <a href="{{ url_for('view_report', report_type='patients') }}" class="btn btn-outline-primary btn-sm px-4 fw-semibold rounded-pill">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Scheduling Report -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-warning-light text-warning mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Appointment Scheduling</h5>
+                <p class="text-muted small mb-4">Monitor booking trends, doctor allocations, and status filters (Booked, Cancelled, Completed).</p>
+                <a href="{{ url_for('view_report', report_type='appointments') }}" class="btn btn-outline-warning btn-sm px-4 fw-semibold rounded-pill text-dark">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Consultations Report -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-success-light text-success mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                    <i class="bi bi-stethoscope"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Clinical Consultations</h5>
+                <p class="text-muted small mb-4">Overview of clinical consultations, doctor notes, diagnosis entries, and consultation fees billing.</p>
+                <a href="{{ url_for('view_report', report_type='consultations') }}" class="btn btn-outline-success btn-sm px-4 fw-semibold rounded-pill">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prescription Analytics Report -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-info-light text-info mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                    <i class="bi bi-prescription2"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Prescription Analytics</h5>
+                <p class="text-muted small mb-4">Analyze medication logs, dosage frequencies, and duration parameters prescribed by physicians.</p>
+                <a href="{{ url_for('view_report', report_type='prescriptions') }}" class="btn btn-outline-info btn-sm px-4 fw-semibold rounded-pill">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Performance Report -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-primary-light text-primary mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; background:rgba(139, 92, 246, 0.1); color:#8b5cf6;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Doctor Performance</h5>
+                <p class="text-muted small mb-4">Analyze workload of doctors, completed visits, total prescriptions written, and billing totals.</p>
+                <a href="{{ url_for('view_report', report_type='doctors') }}" class="btn btn-outline-primary btn-sm px-4 fw-semibold rounded-pill" style="color:#8b5cf6; border-color:#8b5cf6;">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department-wise Metrics Report -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-danger-light text-danger mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                    <i class="bi bi-building"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Department-wise Activity</h5>
+                <p class="text-muted small mb-4">Evaluate department-level metrics (Pediatrics, Cardiology, etc.) including appointments and billed revenue.</p>
+                <a href="{{ url_for('view_report', report_type='departments') }}" class="btn btn-outline-danger btn-sm px-4 fw-semibold rounded-pill">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Hospital Aggregations Summary -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm card-lift">
+            <div class="card-body p-4 text-center">
+                <div class="metric-icon bg-success-light text-success mx-auto mb-3" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; background:rgba(16, 185, 129, 0.1); color:#10b981;">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-2">Monthly Aggregations</h5>
+                <p class="text-muted small mb-4">High-level month-by-month progress summary of hospital growth, visit counts, and bills collections.</p>
+                <a href="{{ url_for('view_report', report_type='monthly') }}" class="btn btn-outline-success btn-sm px-4 fw-semibold rounded-pill" style="color:#10b981; border-color:#10b981;">
+                    Generate Report <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -46,6 +46,9 @@ class Patient(db.Model):
 
     email = db.Column(db.String(120), nullable=True)
 
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 
 
 class Appointment(db.Model):
@@ -361,6 +364,32 @@ class LoginActivity(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="login_activities")
+
+
+class Feedback(db.Model):
+    __tablename__ = "feedbacks"
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey("patients.id"), nullable=False, index=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True, index=True)
+    consultation_id = db.Column(db.Integer, db.ForeignKey("consultations.id"), nullable=True, index=True)
+
+    doctor_rating = db.Column(db.Integer, nullable=False, default=5)
+    hospital_rating = db.Column(db.Integer, nullable=False, default=5)
+    lab_rating = db.Column(db.Integer, nullable=False, default=5)
+    pharmacy_rating = db.Column(db.Integer, nullable=False, default=5)
+
+    comments = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+    patient = db.relationship("Patient", backref="feedbacks")
+    doctor = db.relationship("User", foreign_keys=[doctor_id])
+    consultation = db.relationship("Consultation", backref="feedbacks")
+
+    @property
+    def overall_rating(self):
+        return round((self.doctor_rating + self.hospital_rating + self.lab_rating + self.pharmacy_rating) / 4.0, 1)
+
 
 
 

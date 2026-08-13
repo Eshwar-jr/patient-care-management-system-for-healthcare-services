@@ -1,0 +1,23 @@
+# Environment & Secret files
+.env
+*.env
+!.env.example
+
+# Byte-compiled / Python runtime
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Database dumps & backups
+database/backups/*.sql
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

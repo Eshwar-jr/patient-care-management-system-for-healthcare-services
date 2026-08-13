@@ -1,0 +1,127 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<div class="container py-3" style="max-width: 800px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1"><i class="bi bi-file-earmark-person text-primary me-2"></i>Feedback Entry #{{ feedback.id }}</h3>
+            <p class="text-muted small mb-0">Submitted on {{ feedback.created_at.strftime('%B %d, %Y at %I:%M %p') if feedback.created_at else 'N/A' }}</p>
+        </div>
+        <a href="{{ url_for('feedbacks') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i> Back to Feedbacks
+        </a>
+    </div>
+
+    <!-- Metadata Card -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Patient</small>
+                    <h5 class="fw-bold text-dark mb-0">{{ feedback.patient.full_name if feedback.patient else 'N/A' }}</h5>
+                    <span class="text-muted small">Age: {{ feedback.patient.age if feedback.patient else 'N/A' }} | Gender: {{ feedback.patient.gender if feedback.patient else 'N/A' }}</span>
+                </div>
+                <div class="col-md-6">
+                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Attending Physician</small>
+                    <h5 class="fw-bold text-dark mb-0">{{ feedback.doctor.full_name if feedback.doctor else 'N/A' }}</h5>
+                    <span class="badge bg-primary bg-opacity-10 text-primary small">{{ doctor_dept }}</span>
+                </div>
+                {% if feedback.consultation %}
+                <div class="col-12 mt-2">
+                    <div class="p-2.5 bg-light rounded-3 border d-flex align-items-center justify-content-between">
+                        <span class="small text-muted"><i class="bi bi-stethoscope text-success me-1"></i> Linked Consultation Visit: <strong>#{{ feedback.consultation.id }}</strong> ({{ feedback.consultation.consultation_date }})</span>
+                        <a href="{{ url_for('view_consultation', id=feedback.consultation.id) }}" class="btn btn-link btn-sm text-decoration-none p-0">View Visit Record</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Ratings Breakdown -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-transparent border-0 pt-4 pb-0">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-sliders text-warning me-2"></i>Detailed Ratings Breakdown</h5>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <!-- Doctor Performance Rating -->
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="fw-semibold text-dark mb-1"><i class="bi bi-person-badge text-primary me-2"></i>Doctor Performance</h6>
+                            <span class="text-warning">
+                                {% for i in range(feedback.doctor_rating) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                {% for i in range(5 - feedback.doctor_rating) %}<i class="bi bi-star text-muted opacity-50"></i>{% endfor %}
+                            </span>
+                        </div>
+                        <h3 class="fw-bold text-primary mb-0">{{ feedback.doctor_rating }}/5</h3>
+                    </div>
+                </div>
+
+                <!-- Hospital Services Rating -->
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="fw-semibold text-dark mb-1"><i class="bi bi-hospital text-success me-2"></i>Hospital Facilities</h6>
+                            <span class="text-warning">
+                                {% for i in range(feedback.hospital_rating) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                {% for i in range(5 - feedback.hospital_rating) %}<i class="bi bi-star text-muted opacity-50"></i>{% endfor %}
+                            </span>
+                        </div>
+                        <h3 class="fw-bold text-success mb-0">{{ feedback.hospital_rating }}/5</h3>
+                    </div>
+                </div>
+
+                <!-- Laboratory Services Rating -->
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="fw-semibold text-dark mb-1"><i class="bi bi-radioactive text-warning me-2"></i>Laboratory Services</h6>
+                            <span class="text-warning">
+                                {% for i in range(feedback.lab_rating) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                {% for i in range(5 - feedback.lab_rating) %}<i class="bi bi-star text-muted opacity-50"></i>{% endfor %}
+                            </span>
+                        </div>
+                        <h3 class="fw-bold text-warning mb-0">{{ feedback.lab_rating }}/5</h3>
+                    </div>
+                </div>
+
+                <!-- Pharmacy Services Rating -->
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="fw-semibold text-dark mb-1"><i class="bi bi-capsule text-danger me-2"></i>Pharmacy Dispensing</h6>
+                            <span class="text-warning">
+                                {% for i in range(feedback.pharmacy_rating) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                {% for i in range(5 - feedback.pharmacy_rating) %}<i class="bi bi-star text-muted opacity-50"></i>{% endfor %}
+                            </span>
+                        </div>
+                        <h3 class="fw-bold text-danger mb-0">{{ feedback.pharmacy_rating }}/5</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-primary bg-opacity-10 rounded-3 border border-primary border-opacity-25 mt-3 text-center">
+                <span class="text-muted small text-uppercase fw-bold me-2">Overall Satisfaction Score:</span>
+                <span class="fs-4 fw-bold text-primary me-2">{{ feedback.overall_rating }} / 5.0</span>
+                <span class="text-warning fs-5">
+                    {% for i in range((feedback.overall_rating)|int) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments & Suggestions Card -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-transparent border-0 pt-4 pb-0">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-chat-left-text text-info me-2"></i>Patient Comments & Suggestions</h5>
+        </div>
+        <div class="card-body p-4">
+            <div class="p-3 bg-light rounded-3 border text-dark">
+                {{ feedback.comments or 'No written comments or suggestions provided by patient.' }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@ from extensions import db
 from models import Patient, User, Consultation, Prescription, LabReport
 from werkzeug.security import generate_password_hash
 from datetime import datetime, date
+from flask_login import login_required, current_user
 
 # ==================================================
 # SERIALIZATION HELPERS
@@ -79,14 +80,27 @@ def serialize_lab_report(l):
 # ==================================================
 
 @app.route("/api/patients", methods=["GET"])
+@login_required
 def api_get_patients():
     try:
+        page = request.args.get('page', type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        if page:
+            pagination = Patient.query.paginate(page=page, per_page=per_page, error_out=False)
+            return jsonify({
+                "items": [serialize_patient(p) for p in pagination.items],
+                "total": pagination.total,
+                "page": pagination.page,
+                "pages": pagination.pages,
+                "per_page": pagination.per_page
+            }), 200
         patients = Patient.query.all()
         return jsonify([serialize_patient(p) for p in patients]), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/patients/<int:id>", methods=["GET"])
+@login_required
 def api_get_patient(id):
     try:
         p = Patient.query.get(id)
@@ -97,6 +111,7 @@ def api_get_patient(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/patients", methods=["POST"])
+@login_required
 def api_create_patient():
     try:
         data = request.get_json()
@@ -128,6 +143,7 @@ def api_create_patient():
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/patients/<int:id>", methods=["PUT"])
+@login_required
 def api_update_patient(id):
     try:
         p = Patient.query.get(id)
@@ -160,6 +176,7 @@ def api_update_patient(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/patients/<int:id>", methods=["DELETE"])
+@login_required
 def api_delete_patient(id):
     try:
         p = Patient.query.get(id)
@@ -177,14 +194,27 @@ def api_delete_patient(id):
 # ==================================================
 
 @app.route("/api/doctors", methods=["GET"])
+@login_required
 def api_get_doctors():
     try:
+        page = request.args.get('page', type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        if page:
+            pagination = User.query.filter_by(role="Doctor").paginate(page=page, per_page=per_page, error_out=False)
+            return jsonify({
+                "items": [serialize_doctor(d) for d in pagination.items],
+                "total": pagination.total,
+                "page": pagination.page,
+                "pages": pagination.pages,
+                "per_page": pagination.per_page
+            }), 200
         doctors = User.query.filter_by(role="Doctor").all()
         return jsonify([serialize_doctor(d) for d in doctors]), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/doctors/<int:id>", methods=["GET"])
+@login_required
 def api_get_doctor(id):
     try:
         d = User.query.filter_by(id=id, role="Doctor").first()
@@ -195,6 +225,7 @@ def api_get_doctor(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/doctors", methods=["POST"])
+@login_required
 def api_create_doctor():
     try:
         data = request.get_json()
@@ -225,6 +256,7 @@ def api_create_doctor():
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/doctors/<int:id>", methods=["PUT"])
+@login_required
 def api_update_doctor(id):
     try:
         d = User.query.filter_by(id=id, role="Doctor").first()
@@ -256,6 +288,7 @@ def api_update_doctor(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/doctors/<int:id>", methods=["DELETE"])
+@login_required
 def api_delete_doctor(id):
     try:
         d = User.query.filter_by(id=id, role="Doctor").first()
@@ -273,14 +306,27 @@ def api_delete_doctor(id):
 # ==================================================
 
 @app.route("/api/consultations", methods=["GET"])
+@login_required
 def api_get_consultations():
     try:
+        page = request.args.get('page', type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        if page:
+            pagination = Consultation.query.paginate(page=page, per_page=per_page, error_out=False)
+            return jsonify({
+                "items": [serialize_consultation(c) for c in pagination.items],
+                "total": pagination.total,
+                "page": pagination.page,
+                "pages": pagination.pages,
+                "per_page": pagination.per_page
+            }), 200
         consultations = Consultation.query.all()
         return jsonify([serialize_consultation(c) for c in consultations]), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/consultations/<int:id>", methods=["GET"])
+@login_required
 def api_get_consultation(id):
     try:
         c = Consultation.query.get(id)
@@ -291,6 +337,7 @@ def api_get_consultation(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/consultations", methods=["POST"])
+@login_required
 def api_create_consultation():
     try:
         data = request.get_json()
@@ -330,6 +377,7 @@ def api_create_consultation():
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/consultations/<int:id>", methods=["PUT"])
+@login_required
 def api_update_consultation(id):
     try:
         c = Consultation.query.get(id)
@@ -370,6 +418,7 @@ def api_update_consultation(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/consultations/<int:id>", methods=["DELETE"])
+@login_required
 def api_delete_consultation(id):
     try:
         c = Consultation.query.get(id)
@@ -387,14 +436,27 @@ def api_delete_consultation(id):
 # ==================================================
 
 @app.route("/api/prescriptions", methods=["GET"])
+@login_required
 def api_get_prescriptions():
     try:
+        page = request.args.get('page', type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        if page:
+            pagination = Prescription.query.paginate(page=page, per_page=per_page, error_out=False)
+            return jsonify({
+                "items": [serialize_prescription(pr) for pr in pagination.items],
+                "total": pagination.total,
+                "page": pagination.page,
+                "pages": pagination.pages,
+                "per_page": pagination.per_page
+            }), 200
         prescriptions = Prescription.query.all()
         return jsonify([serialize_prescription(pr) for pr in prescriptions]), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/prescriptions/<int:id>", methods=["GET"])
+@login_required
 def api_get_prescription(id):
     try:
         pr = Prescription.query.get(id)
@@ -405,6 +467,7 @@ def api_get_prescription(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/prescriptions", methods=["POST"])
+@login_required
 def api_create_prescription():
     try:
         data = request.get_json()
@@ -445,6 +508,7 @@ def api_create_prescription():
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/prescriptions/<int:id>", methods=["PUT"])
+@login_required
 def api_update_prescription(id):
     try:
         pr = Prescription.query.get(id)
@@ -486,6 +550,7 @@ def api_update_prescription(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/prescriptions/<int:id>", methods=["DELETE"])
+@login_required
 def api_delete_prescription(id):
     try:
         pr = Prescription.query.get(id)
@@ -503,14 +568,27 @@ def api_delete_prescription(id):
 # ==================================================
 
 @app.route("/api/lab_reports", methods=["GET"])
+@login_required
 def api_get_lab_reports():
     try:
+        page = request.args.get('page', type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        if page:
+            pagination = LabReport.query.paginate(page=page, per_page=per_page, error_out=False)
+            return jsonify({
+                "items": [serialize_lab_report(l) for l in pagination.items],
+                "total": pagination.total,
+                "page": pagination.page,
+                "pages": pagination.pages,
+                "per_page": pagination.per_page
+            }), 200
         reports = LabReport.query.all()
         return jsonify([serialize_lab_report(l) for l in reports]), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/lab_reports/<int:id>", methods=["GET"])
+@login_required
 def api_get_lab_report(id):
     try:
         l = LabReport.query.get(id)
@@ -521,6 +599,7 @@ def api_get_lab_report(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/lab_reports", methods=["POST"])
+@login_required
 def api_create_lab_report():
     try:
         data = request.get_json()
@@ -573,6 +652,7 @@ def api_create_lab_report():
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/lab_reports/<int:id>", methods=["PUT"])
+@login_required
 def api_update_lab_report(id):
     try:
         l = LabReport.query.get(id)
@@ -626,6 +706,7 @@ def api_update_lab_report(id):
         return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
 @app.route("/api/lab_reports/<int:id>", methods=["DELETE"])
+@login_required
 def api_delete_lab_report(id):
     try:
         l = LabReport.query.get(id)

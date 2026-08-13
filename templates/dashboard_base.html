@@ -189,6 +189,12 @@
                     <a href="{{ url_for('search_reports') }}" class="{% if request.path == url_for('search_reports') %}active{% endif %} mt-2">
                         <i class="bi bi-search"></i> Search & Reports
                     </a>
+                    <a href="{{ url_for('reports_dashboard') }}" class="{% if request.path == url_for('reports_dashboard') %}active{% endif %} mt-2">
+                        <i class="bi bi-file-earmark-bar-graph"></i> Administrative Reports
+                    </a>
+                    <a href="{{ url_for('feedbacks') }}" class="{% if request.path == url_for('feedbacks') %}active{% endif %} mt-2">
+                        <i class="bi bi-star-half"></i> Patient Feedback & Satisfaction
+                    </a>
                 {% endif %}
                 <!-- DOCTOR -->
                 {% if current_user.role.lower() == "doctor" %}
@@ -272,6 +278,12 @@
 
                     <a href="{{ url_for('search_reports') }}" class="{% if request.path == url_for('search_reports') %}active{% endif %} mt-2">
                         <i class="bi bi-search"></i> Search & Reports
+                    </a>
+                    <a href="{{ url_for('reports_dashboard') }}" class="{% if request.path == url_for('reports_dashboard') %}active{% endif %} mt-2">
+                        <i class="bi bi-file-earmark-bar-graph"></i> Administrative Reports
+                    </a>
+                    <a href="{{ url_for('feedbacks') }}" class="{% if request.path == url_for('feedbacks') %}active{% endif %} mt-2">
+                        <i class="bi bi-star-half"></i> Patient Feedback & Satisfaction
                     </a>
                 {% endif %}
 
@@ -382,6 +394,9 @@
                     </a>
                     <a href="{{ url_for('lab_reports') }}" class="{% if request.path == url_for('lab_reports') %}active{% endif %}">
                         <i class="bi bi-radioactive"></i> My Lab Reports
+                    </a>
+                    <a href="{{ url_for('feedbacks') }}" class="{% if request.path == url_for('feedbacks') %}active{% endif %}">
+                        <i class="bi bi-star-half"></i> My Feedback & Ratings
                     </a>
 
                     <!-- Patient Billing Accordion -->

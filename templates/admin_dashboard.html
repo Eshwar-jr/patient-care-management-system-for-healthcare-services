@@ -1,23 +1,81 @@
 {% extends "dashboard_base.html" %}
 
 {% block content %}
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+<style>
+    .metric-card-compact {
+        padding: 0.5rem !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+    }
+    .metric-card-compact .card-body {
+        padding: 0.25rem !important;
+    }
+    .metric-card-compact .metric-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 4px !important;
+        border-radius: 6px !important;
+    }
+    .metric-card-compact h5 {
+        font-size: 0.65rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 2px !important;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+    .metric-card-compact h2 {
+        font-size: 1.1rem !important;
+        font-weight: 700;
+        margin-bottom: 0 !important;
+        line-height: 1.1;
+        color: #1e293b;
+    }
+    .chart-container-compact {
+        position: relative;
+        height: 230px;
+        width: 100%;
+    }
+    .shadow-premium-compact {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+        border-radius: 10px;
+        border: 1px solid #f1f5f9;
+    }
+    .table-compact th, .table-compact td {
+        padding: 0.35rem 0.5rem !important;
+        font-size: 0.72rem !important;
+    }
+    .fs-7 {
+        font-size: 0.825rem !important;
+    }
+    .fs-8 {
+        font-size: 0.725rem !important;
+    }
+</style>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
     <div>
-        <h2 class="fw-bold text-dark mb-1">Admin Dashboard</h2>
-        <p class="text-muted mb-0">
+        <h3 class="fw-bold text-dark mb-0" style="font-size: 1.5rem;">Admin Dashboard</h3>
+        <p class="text-muted mb-0 fs-8">
             Welcome back, <span class="fw-semibold text-primary">{{ current_user.full_name }}</span>
         </p>
     </div>
-    <div class="text-muted fs-7 bg-white px-3 py-2 rounded-3 border">
+    <div class="text-muted fs-8 bg-white px-2.5 py-1.5 rounded-3 border d-flex align-items-center">
         <i class="bi bi-calendar3 text-primary me-2"></i><strong>{{ today }}</strong>
     </div>
 </div>
 
-<!-- Statistics Cards -->
-<div class="row g-3 mb-4">
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+<!-- Statistics Cards (Single row of 12 compact cards on desktop) -->
+<div class="row g-2 mb-3">
+    <!-- Patients -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-people-fill"></i>
                 </div>
@@ -27,9 +85,10 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card doctor card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Doctors -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact doctor card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-person-badge-fill"></i>
                 </div>
@@ -39,9 +98,10 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card nurse card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Nurses -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact nurse card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-person-heart"></i>
                 </div>
@@ -51,9 +111,10 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- EHR Records -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon bg-info-light text-info">
                     <i class="bi bi-file-earmark-medical"></i>
                 </div>
@@ -63,9 +124,10 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Completed Consultations -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon bg-primary-light text-primary">
                     <i class="bi bi-stethoscope"></i>
                 </div>
@@ -75,21 +137,23 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Prescriptions -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon bg-success-light text-success">
                     <i class="bi bi-prescription2"></i>
                 </div>
-                <h5>Prescriptions</h5>
+                <h5>Prescripts</h5>
                 <h2>{{ prescription_count or 0 }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Lab Reports -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon bg-warning-light text-warning">
                     <i class="bi bi-radioactive"></i>
                 </div>
@@ -99,21 +163,64 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift appointment border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Today's Appointments -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact appointment card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-calendar-event"></i>
                 </div>
-                <h5>Appts</h5>
-                <h2>{{ appointment_count }}</h2>
+                <h5>Today's Appts</h5>
+                <h2>{{ today_appointments_count }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift treatment border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Cancelled Appointments -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100" style="border-left: 3px solid var(--danger);">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
+                <div class="metric-icon bg-danger-light text-danger">
+                    <i class="bi bi-calendar-x-fill"></i>
+                </div>
+                <h5>Cancelled</h5>
+                <h2>{{ cancelled_appointments_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Lab Reports -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100" style="border-left: 3px solid var(--warning);">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
+                <div class="metric-icon bg-warning-light text-warning">
+                    <i class="bi bi-file-earmark-medical-fill"></i>
+                </div>
+                <h5>Pending Labs</h5>
+                <h2>{{ pending_labs_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unread Notifications -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <a href="{{ url_for('notifications') }}" class="text-decoration-none">
+            <div class="card metric-card metric-card-compact card-lift border-0 h-100" style="border-left: 3px solid var(--info);">
+                <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
+                    <div class="metric-icon bg-info-light text-info">
+                        <i class="bi bi-bell-fill"></i>
+                    </div>
+                    <h5>Unread Alerts</h5>
+                    <h2>{{ unread_notification_count or 0 }}</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Treatments -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact treatment card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon">
                     <i class="bi bi-capsule-pill"></i>
                 </div>
@@ -123,94 +230,244 @@
         </div>
     </div>
 
-    <!-- Pharmacy Inventory Metric -->
-    <div class="col-sm-6 col-md-3 col-xl-3">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
+    <!-- Pharmacy Stock -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-1">
+        <div class="card metric-card metric-card-compact card-lift border-0 h-100">
+            <div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
                 <div class="metric-icon" style="background: rgba(253, 224, 71, 0.15); color: #ca8a04;">
                     <i class="bi bi-capsule"></i>
                 </div>
-                <h5>Pharmacy Stock</h5>
-                <h2 class="mb-1">{{ medicine_count }} <span class="fs-6 fw-normal text-muted">items</span></h2>
-                <small class="text-muted">{{ total_stock }} units total</small>
+                <h5>Pharm Stock</h5>
+                <h2>{{ medicine_count }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section (3 per row on desktop, 2 per row on medium screens) -->
+<div class="row g-3 mb-3">
+    <!-- Chart 1: Hospital Metrics Summary -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Hospital Metrics Summary</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="adminChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Billing Summary Metric -->
-    <div class="col-sm-6 col-md-6 col-xl-6">
-        <div class="card metric-card card-lift border-0 h-100">
-            <div class="card-body text-center d-flex flex-column justify-content-center">
-                <div class="metric-icon" style="background: rgba(239, 68, 68, 0.15); color: #dc2626;">
+    <!-- Chart 2: Billing Analytics (INR) -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Billing Analytics (INR)</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="billingChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 3: Monthly Patient Registrations -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Monthly Patient Registrations</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="monthlyRegistrationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 4: Appointment Trends -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Appointment Trends (Last 7 Days)</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="appointmentTrendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 5: Doctor Consultations -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Doctor-wise Consultations</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="doctorConsultationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 6: Patient Demographics -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Patient Demographics (Age & Gender)</h6>
+            </div>
+            <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                <div class="chart-container-compact">
+                    <div class="row h-100 g-1">
+                        <div class="col-6 d-flex align-items-center justify-content-center" style="position: relative; height: 100%;">
+                            <canvas id="demographicsGenderChart"></canvas>
+                        </div>
+                        <div class="col-6 d-flex align-items-center justify-content-center" style="position: relative; height: 100%;">
+                            <canvas id="demographicsAgeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 7: Disease Distribution -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Disease Distribution</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="diseaseDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 8: Laboratory Test Statistics -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 pt-3 pb-0 text-center">
+                <h6 class="fw-bold text-dark mb-0 fs-7">Laboratory Test Statistics</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-2">
+                <div class="chart-container-compact">
+                    <canvas id="labStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 3: Billing Summary + Audit Trail -->
+<div class="row g-3 mb-3">
+    <!-- Billing Summary Card -->
+    <div class="col-lg-4">
+        <div class="card metric-card card-lift border-0 h-100 shadow-premium-compact">
+            <div class="card-body text-center d-flex flex-column justify-content-center py-3">
+                <div class="metric-icon mb-2" style="background: rgba(239, 68, 68, 0.15); color: #dc2626; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin: 0 auto 8px;">
                     <i class="bi bi-cash-coin"></i>
                 </div>
-                <h5>Billing Summary</h5>
-                <h2 class="mb-1">₹{{ "%.2f"|format(total_billed) }}</h2>
-                <div class="d-flex justify-content-center gap-3 small mt-1">
-                    <span class="text-success">Paid: ₹{{ "%.0f"|format(total_paid) }}</span>
-                    <span class="text-danger">Pending: ₹{{ "%.0f"|format(total_pending) }}</span>
+                <h6 class="fw-bold text-muted text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Billing Summary</h6>
+                <h3 class="fw-bold mb-2 text-dark" style="font-size: 1.5rem;">₹{{ "%.2f"|format(total_billed) }}</h3>
+                <div class="d-flex justify-content-center gap-3 mt-1" style="font-size: 0.75rem;">
+                    <span class="text-success fw-semibold">Paid: ₹{{ "%.0f"|format(total_paid) }}</span>
+                    <span class="text-danger fw-semibold">Pending: ₹{{ "%.0f"|format(total_pending) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Audit Trail Card -->
+    <div class="col-lg-8">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center pt-3 pb-1">
+                <h6 class="fw-bold text-dark mb-0 fs-7"><i class="bi bi-shield-check text-primary me-2"></i>System Audit Trail: Recent Logs</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive" style="max-height: 180px; overflow-y: auto;">
+                    <table class="table table-hover align-middle mb-0 table-compact">
+                        <thead>
+                            <tr class="table-light">
+                                <th class="ps-3">Timestamp</th>
+                                <th>Email / Username</th>
+                                <th>Action</th>
+                                <th>Role</th>
+                                <th>IP Address</th>
+                                <th class="pe-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for log in login_activities %}
+                            <tr>
+                                <td class="ps-3 text-muted" style="font-size: 0.68rem;">{{ log.timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                                <td class="fw-semibold text-dark">{{ log.email }}</td>
+                                <td>
+                                    {% if log.action == 'Login' %}
+                                        <span class="badge bg-primary bg-opacity-10 text-primary text-uppercase px-2 py-0.5" style="font-size: 0.6rem;">Login</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary text-uppercase px-2 py-0.5" style="font-size: 0.6rem;">Logout</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-capitalize">{{ log.role or 'N/A' }}</td>
+                                <td><code>{{ log.ip_address }}</code></td>
+                                <td class="pe-3">
+                                    {% if log.status == 'Success' %}
+                                        <span class="badge bg-success rounded-pill px-2 py-0.5" style="font-size: 0.6rem;">Success</span>
+                                    {% else %}
+                                        <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.6rem;">Failed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">No Login Activities Found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Charts Section -->
-<div class="row g-4 mb-4">
-    <!-- Donut Chart -->
-    <div class="col-lg-6">
-        <div class="card border-0 h-100 shadow-premium">
-            <div class="card-header bg-transparent border-0 pt-4 pb-0 text-center">
-                <h5 class="fw-bold text-dark mb-0">Hospital Metrics Summary</h5>
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center" style="height:320px;">
-                <canvas id="adminChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Billing Bar Chart -->
-    <div class="col-lg-6">
-        <div class="card border-0 h-100 shadow-premium">
-            <div class="card-header bg-transparent border-0 pt-4 pb-0 text-center">
-                <h5 class="fw-bold text-dark mb-0">Billing Analytics (INR)</h5>
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center" style="height:320px;">
-                <canvas id="billingChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Lists Section -->
-<div class="row g-4 mb-4">
+<!-- Row 4: Recent Patients + Recent Appointments -->
+<div class="row g-3 mb-3">
     <!-- Recent Patients -->
-    <div class="col-lg-6 col-md-6">
-        <div class="card border-0 h-100 shadow-premium">
-            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-plus text-success me-2"></i>Recent Patients</h5>
-                <a href="{{ url_for('patients') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
+    <div class="col-lg-6">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-3 pb-1">
+                <h6 class="fw-bold text-dark mb-0 fs-7"><i class="bi bi-person-plus text-success me-2"></i>Recent Patients</h6>
+                <a href="{{ url_for('patients') }}" class="btn btn-secondary btn-sm py-0.5 px-2 fs-8">View All</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive border-0">
-                    <table class="table align-middle">
+                    <table class="table align-middle table-compact">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th class="ps-3">Name</th>
                                 <th>Age</th>
-                                <th>Disease</th>
+                                <th class="pe-3">Disease</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for patient in recent_patients %}
                             <tr>
-                                <td><span class="fw-semibold">{{ patient.full_name }}</span></td>
+                                <td class="ps-3"><span class="fw-semibold">{{ patient.full_name }}</span></td>
                                 <td>{{ patient.age }}</td>
-                                <td><span class="badge bg-primary-light text-primary">{{ patient.disease }}</span></td>
+                                <td class="pe-3"><span class="badge bg-primary-light text-primary">{{ patient.disease }}</span></td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="3" class="text-center text-muted py-4">No Patients Found</td>
+                                <td colspan="3" class="text-center text-muted py-3">No Patients Found</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -221,32 +478,32 @@
     </div>
 
     <!-- Recent Appointments -->
-    <div class="col-lg-6 col-md-6">
-        <div class="card border-0 h-100 shadow-premium">
-            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-4 pb-2">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-check text-info me-2"></i>Recent Appointments</h5>
-                <a href="{{ url_for('appointments') }}" class="btn btn-secondary btn-sm py-1 px-2 fs-8">View All</a>
+    <div class="col-lg-6">
+        <div class="card border-0 h-100 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-3 pb-1">
+                <h6 class="fw-bold text-dark mb-0 fs-7"><i class="bi bi-calendar-check text-info me-2"></i>Recent Appointments</h6>
+                <a href="{{ url_for('appointments') }}" class="btn btn-secondary btn-sm py-0.5 px-2 fs-8">View All</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive border-0">
-                    <table class="table align-middle">
+                    <table class="table align-middle table-compact">
                         <thead>
                             <tr>
-                                <th>Patient</th>
+                                <th class="ps-3">Patient</th>
                                 <th>Doctor</th>
-                                <th>Date</th>
+                                <th class="pe-3">Date</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for appointment in recent_appointments %}
                             <tr>
-                                <td><span class="fw-semibold">{{ appointment.patient.full_name }}</span></td>
+                                <td class="ps-3"><span class="fw-semibold">{{ appointment.patient.full_name }}</span></td>
                                 <td>{{ appointment.doctor_name }}</td>
-                                <td><span class="small text-muted">{{ appointment.appointment_date }}</span></td>
+                                <td class="pe-3"><span class="text-muted">{{ appointment.appointment_date }}</span></td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="3" class="text-center text-muted py-4">No Appointments Found</td>
+                                <td colspan="3" class="text-center text-muted py-3">No Appointments Found</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -257,51 +514,46 @@
     </div>
 </div>
 
-<!-- Login Audit Log Section -->
-<div class="row g-4 mt-2">
+<!-- Row 5: Recent Patient Feedback -->
+<div class="row g-3 mb-3">
     <div class="col-12">
-        <div class="card border-0 shadow-premium">
-            <div class="card-header bg-transparent border-0 d-flex align-items-center pt-4 pb-2">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-primary me-2"></i>System Audit Trail: Recent Login & Session Actions</h5>
+        <div class="card border-0 shadow-premium-compact">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-3 pb-1">
+                <h6 class="fw-bold text-dark mb-0 fs-7"><i class="bi bi-star-half text-warning me-2"></i>Recent Patient Feedback & Ratings</h6>
+                <a href="{{ url_for('feedbacks') }}" class="btn btn-secondary btn-sm py-0.5 px-2 fs-8">View All Feedback</a>
             </div>
             <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                <div class="table-responsive border-0">
+                    <table class="table align-middle table-compact mb-0">
                         <thead>
                             <tr class="table-light">
-                                <th class="ps-4">Timestamp</th>
-                                <th>Email / Username</th>
-                                <th>Action</th>
-                                <th>Assigned Role</th>
-                                <th>Client IP Address</th>
-                                <th class="pe-4">Status</th>
+                                <th class="ps-3">Date</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Doctor Rating</th>
+                                <th>Overall Score</th>
+                                <th class="pe-3">Comments</th>
                             </tr>
                         </thead>
                         <tbody>
-                        {% for log in login_activities %}
+                        {% for fb in recent_feedbacks %}
                             <tr>
-                                <td class="ps-4 text-muted small">{{ log.timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
-                                <td><span class="fw-semibold text-dark">{{ log.email }}</span></td>
+                                <td class="ps-3 text-muted" style="font-size: 0.68rem;">{{ fb.created_at.strftime('%Y-%m-%d %I:%M %p') if fb.created_at else 'N/A' }}</td>
+                                <td class="fw-semibold text-dark">{{ fb.patient.full_name if fb.patient else 'N/A' }}</td>
+                                <td>{{ fb.doctor.full_name if fb.doctor else 'N/A' }}</td>
                                 <td>
-                                    {% if log.action == 'Login' %}
-                                        <span class="badge bg-primary bg-opacity-10 text-primary text-uppercase px-2.5 py-1" style="font-size: 0.7rem;">Login</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary text-uppercase px-2.5 py-1" style="font-size: 0.7rem;">Logout</span>
-                                    {% endif %}
+                                    <span class="text-warning">
+                                        {% for i in range(fb.doctor_rating) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                                    </span>
                                 </td>
-                                <td><span class="text-capitalize small">{{ log.role or 'N/A' }}</span></td>
-                                <td><code>{{ log.ip_address }}</code></td>
-                                <td class="pe-4">
-                                    {% if log.status == 'Success' %}
-                                        <span class="badge bg-success rounded-pill px-2.5 py-1" style="font-size: 0.65rem;">Success</span>
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-pill px-2.5 py-1" style="font-size: 0.65rem;">Failed</span>
-                                    {% endif %}
+                                <td>
+                                    <span class="badge bg-success bg-opacity-15 text-success font-monospace fs-8">{{ fb.overall_rating }} ★</span>
                                 </td>
+                                <td class="pe-3 text-muted small text-truncate" style="max-width: 250px;">{{ fb.comments or 'No written comments' }}</td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">No Login Activities Found</td>
+                                <td colspan="6" class="text-center text-muted py-3">No Feedback Recorded Yet</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -416,6 +668,230 @@ document.addEventListener("DOMContentLoaded", function(){
                             }
                         }
                     }
+                }
+            }
+        });
+    }
+
+    // Monthly Patient Registrations Chart
+    const monthlyRegsCtx = document.getElementById("monthlyRegistrationsChart");
+    if (monthlyRegsCtx) {
+        new Chart(monthlyRegsCtx, {
+            type: "bar",
+            data: {
+                labels: {{ patient_months | tojson }},
+                datasets: [{
+                    label: "Registrations",
+                    data: {{ patient_counts | tojson }},
+                    backgroundColor: "rgba(13, 148, 136, 0.75)", // Teal
+                    borderColor: "#0d9488",
+                    borderWidth: 1.5,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    // Appointment Trends Chart
+    const appointmentTrendsCtx = document.getElementById("appointmentTrendsChart");
+    if (appointmentTrendsCtx) {
+        new Chart(appointmentTrendsCtx, {
+            type: "line",
+            data: {
+                labels: {{ trend_dates | tojson }},
+                datasets: [{
+                    label: "Appointments",
+                    data: {{ trend_counts | tojson }},
+                    fill: true,
+                    backgroundColor: "rgba(2, 132, 199, 0.15)", // Light Blue
+                    borderColor: "#0284c7", // Blue
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointBackgroundColor: "#0284c7"
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    // Doctor Consultations Chart
+    const doctorConsultationsCtx = document.getElementById("doctorConsultationsChart");
+    if (doctorConsultationsCtx) {
+        new Chart(doctorConsultationsCtx, {
+            type: "bar",
+            data: {
+                labels: {{ doctor_names | tojson }},
+                datasets: [{
+                    label: "Consultations Count",
+                    data: {{ consultation_counts | tojson }},
+                    backgroundColor: "rgba(139, 92, 246, 0.75)", // Purple
+                    borderColor: "#8b5cf6",
+                    borderWidth: 1.5,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Makes it a horizontal bar chart
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    // Patient Demographics (Gender) Doughnut
+    const genderCtx = document.getElementById("demographicsGenderChart");
+    if (genderCtx) {
+        new Chart(genderCtx, {
+            type: "doughnut",
+            data: {
+                labels: {{ genders | tojson }},
+                datasets: [{
+                    data: {{ gender_counts | tojson }},
+                    backgroundColor: ["#0284c7", "#ec4899", "#8b5cf6", "#64748b"], // Blue, Pink, Purple, Gray
+                    borderWidth: 1.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Gender Distribution',
+                        font: { size: 12, family: "'Poppins', sans-serif" }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 10, font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    }
+
+    // Patient Demographics (Age Group) Bar
+    const ageCtx = document.getElementById("demographicsAgeChart");
+    if (ageCtx) {
+        new Chart(ageCtx, {
+            type: "bar",
+            data: {
+                labels: {{ age_labels | tojson }},
+                datasets: [{
+                    data: {{ age_values | tojson }},
+                    backgroundColor: "rgba(245, 158, 11, 0.75)", // Orange
+                    borderColor: "#f59e0b",
+                    borderWidth: 1.5,
+                    borderRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Age Groups',
+                        font: { size: 12, family: "'Poppins', sans-serif" }
+                    },
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    // Disease Distribution Doughnut Chart
+    const diseaseCtx = document.getElementById("diseaseDistributionChart");
+    if (diseaseCtx) {
+        new Chart(diseaseCtx, {
+            type: "doughnut",
+            data: {
+                labels: {{ disease_labels | tojson }},
+                datasets: [{
+                    data: {{ disease_counts | tojson }},
+                    backgroundColor: [
+                        "rgba(2, 132, 199, 0.8)",
+                        "rgba(13, 148, 136, 0.8)",
+                        "rgba(139, 92, 246, 0.8)",
+                        "rgba(245, 158, 11, 0.8)",
+                        "rgba(239, 68, 68, 0.8)",
+                        "rgba(100, 116, 139, 0.8)"
+                    ],
+                    borderWidth: 1.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { boxWidth: 10, font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    }
+
+    // Laboratory Test Statistics Bar Chart
+    const labStatusCtx = document.getElementById("labStatusChart");
+    if (labStatusCtx) {
+        new Chart(labStatusCtx, {
+            type: "bar",
+            data: {
+                labels: {{ lab_status_labels | tojson }},
+                datasets: [{
+                    label: "Reports Count",
+                    data: {{ lab_status_counts | tojson }},
+                    backgroundColor: [
+                        "rgba(245, 158, 11, 0.75)",
+                        "rgba(13, 148, 136, 0.75)",
+                        "rgba(2, 132, 199, 0.75)"
+                    ],
+                    borderColor: [
+                        "#f59e0b",
+                        "#0d9488",
+                        "#0284c7"
+                    ],
+                    borderWidth: 1.5,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
                 }
             }
         });

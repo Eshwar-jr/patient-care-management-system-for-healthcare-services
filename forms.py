@@ -425,6 +425,17 @@ class RecordPaymentForm(FlaskForm):
     submit = SubmitField("Record Payment")
 
 
+class FeedbackForm(FlaskForm):
+    consultation = SelectField("Consultation", coerce=int, validators=[DataRequired(message="Please select a completed consultation")])
+    doctor_rating = IntegerField("Doctor Rating (1-5)", validators=[DataRequired(), NumberRange(min=1, max=5, message="Rating must be between 1 and 5 stars")])
+    hospital_rating = IntegerField("Hospital Rating (1-5)", validators=[DataRequired(), NumberRange(min=1, max=5, message="Rating must be between 1 and 5 stars")])
+    lab_rating = IntegerField("Laboratory Rating (1-5)", validators=[DataRequired(), NumberRange(min=1, max=5, message="Rating must be between 1 and 5 stars")])
+    pharmacy_rating = IntegerField("Pharmacy Rating (1-5)", validators=[DataRequired(), NumberRange(min=1, max=5, message="Rating must be between 1 and 5 stars")])
+    comments = TextAreaField("Comments & Suggestions", validators=[Optional(), Length(max=1000)])
+    submit = SubmitField("Submit Feedback")
+
+
+
 
 
 

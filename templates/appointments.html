@@ -75,6 +75,11 @@
                                     <span class="text-muted small">-</span>
                                 {% endif %}
                             {% else %}
+                                {% if appointment.status in ['Booked', 'Scheduled'] and current_user.role.lower() in ['admin', 'doctor'] %}
+                                    <a href="{{ url_for('add_consultation', patient_id=appointment.patient_id, appointment_id=appointment.id) }}" class="btn btn-success btn-sm py-1 px-2" title="Record Consultation">
+                                        <i class="bi bi-stethoscope"></i> Consult
+                                    </a>
+                                {% endif %}
                                 <a href="{{ url_for('edit_appointment', id=appointment.id) }}" class="btn btn-outline-warning btn-sm py-1 px-2">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
