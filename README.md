@@ -1,4 +1,4 @@
-# Integrated Patient Care Management System (IPCMS)
+# Patient Care Management System for Healthcare Services
 
 A comprehensive healthcare management web application built with Python Flask, SQLAlchemy, MySQL, and Bootstrap 5.
 
